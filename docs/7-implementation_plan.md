@@ -16,7 +16,7 @@
 - [x] **BE-01**: Node.js/Express 프로젝트 초기화 <!-- id: be-01 -->
   - **설치**: `express`, `cors`, `dotenv`, `pg`, `nodemon`
   - **완료 조건**: `http://localhost:3000/health` 호출 시 200 OK 응답
-- [ ] **FE-01**: React/Vite 프로젝트 초기화 <!-- id: fe-01 -->
+- [x] **FE-01**: React/Vite 프로젝트 초기화 <!-- id: fe-01 -->
   - **설치**: `axios`, `zustand`, `react-router-dom`, `tailwindcss`
   - **완료 조건**: 개발 서버 실행 및 Tailwind 스타일 적용 확인
 
