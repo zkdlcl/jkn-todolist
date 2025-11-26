@@ -31,8 +31,9 @@
 - [x] **BE-03**: 인증 서비스 및 컨트롤러 구현 (`AuthService`) <!-- id: be-03 -->
   - **기능**: 비밀번호 해싱(bcrypt), JWT 발급, 로그인/회원가입 API
   - **완료**: AuthService, AuthController, 인증 미들웨어, 라우트 구현, 9개 통합 테스트 통과
-- [ ] **FE-02**: Axios 인터셉터 및 인증 스토어 구현 (`useAuthStore`) <!-- id: fe-02 -->
+- [x] **FE-02**: Axios 인터셉터 및 인증 스토어 구현 (`useAuthStore`) <!-- id: fe-02 -->
   - **기능**: JWT 저장, 요청 헤더 자동 포함
+  - **완료**: Axios 클라이언트, 인터셉터, Zustand 인증 스토어, authAPI 구현
 - [ ] **FE-03**: 로그인/회원가입 UI 구현 <!-- id: fe-03 -->
   - **기능**: 폼 유효성 검사, API 연동
 
