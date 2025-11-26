@@ -25,10 +25,12 @@
 > **목표**: 회원가입, 로그인, 로그아웃 기능을 구현하고 JWT 토큰을 관리한다.
 > **의존성**: Phase 1 완료
 
-- [ ] **BE-02**: 사용자 모델 및 리포지토리 구현 (`UserRepository`) <!-- id: be-02 -->
-  - **기능**: `create`, `findByEmail`
-- [ ] **BE-03**: 인증 서비스 및 컨트롤러 구현 (`AuthService`) <!-- id: be-03 -->
+- [x] **BE-02**: 사용자 모델 및 리포지토리 구현 (`UserRepository`) <!-- id: be-02 -->
+  - **기능**: `create`, `findByEmail`, `findById`
+  - **완료**: 데이터베이스 연결, Repository 패턴 구현, 테스트 통과
+- [x] **BE-03**: 인증 서비스 및 컨트롤러 구현 (`AuthService`) <!-- id: be-03 -->
   - **기능**: 비밀번호 해싱(bcrypt), JWT 발급, 로그인/회원가입 API
+  - **완료**: AuthService, AuthController, 인증 미들웨어, 라우트 구현, 9개 통합 테스트 통과
 - [ ] **FE-02**: Axios 인터셉터 및 인증 스토어 구현 (`useAuthStore`) <!-- id: fe-02 -->
   - **기능**: JWT 저장, 요청 헤더 자동 포함
 - [ ] **FE-03**: 로그인/회원가입 UI 구현 <!-- id: fe-03 -->
