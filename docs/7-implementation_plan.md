@@ -13,7 +13,7 @@
 - [x] **DB-01**: PostgreSQL 데이터베이스 생성 및 스키마 적용 <!-- id: db-01 -->
   - **입력**: `database/schema.sql`
   - **완료 조건**: `users`, `todos`, `refresh_tokens`, `public_events` 테이블 생성 확인
-- [ ] **BE-01**: Node.js/Express 프로젝트 초기화 <!-- id: be-01 -->
+- [x] **BE-01**: Node.js/Express 프로젝트 초기화 <!-- id: be-01 -->
   - **설치**: `express`, `cors`, `dotenv`, `pg`, `nodemon`
   - **완료 조건**: `http://localhost:3000/health` 호출 시 200 OK 응답
 - [ ] **FE-01**: React/Vite 프로젝트 초기화 <!-- id: fe-01 -->
