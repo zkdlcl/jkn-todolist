@@ -1,76 +1,82 @@
 import axios from "axios";
+import useAuthStore from "../stores/useAuthStore";
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:3000/api";
 
-// Axios 인스턴스 생성
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
+  timeout: 10000,
   headers: {
     "Content-Type": "application/json",
   },
-  timeout: 10000, // 10초
 });
 
-// 요청 인터셉터: Authorization 헤더에 토큰 추가
+// 요청 인터셉터 - 요청 전에 토큰을 헤더에 추가
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("accessToken");
-
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    const { accessToken } = useAuthStore.getState();
+    console.log("API 요청 전, 현재 토큰:", accessToken);
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+      console.log("요청에 토큰 추가됨:", accessToken);
+    } else {
+      console.log("토큰이 없어서 헤더에 추가하지 않음");
     }
-
     return config;
   },
   (error) => {
+    console.error("요청 인터셉터 에러:", error);
     return Promise.reject(error);
   }
 );
 
-// 응답 인터셉터: 401 에러 시 토큰 갱신 시도
+// 응답 인터셉터 - 401 에러 시 토큰 갱신 시도
 apiClient.interceptors.response.use(
-  (response) => {
-    return response;
-  },
+  (response) => response,
   async (error) => {
     const originalRequest = error.config;
+    console.log("API 응답 에러 발생:", error.response?.status, error.message);
 
-    // 401 에러이고, 재시도하지 않은 요청인 경우
     if (error.response?.status === 401 && !originalRequest._retry) {
+      console.log("401 에러 발생, 토큰 갱신 시도");
       originalRequest._retry = true;
 
       try {
-        const refreshToken = localStorage.getItem("refreshToken");
+        // refresh 토큰을 사용하여 새로운 access 토큰을 발급받는 API 호출
+        const { refreshToken } = useAuthStore.getState();
+        console.log("갱신 시도 시 리프레시 토큰:", refreshToken);
 
         if (!refreshToken) {
-          // Refresh Token이 없으면 로그아웃 처리
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("refreshToken");
-          window.location.href = "/login";
+          // 리프레시 토큰이 없다면 로그아웃 처리
+          console.log("리프레시 토큰이 없음, 로그아웃 처리");
+          useAuthStore.getState().logout();
           return Promise.reject(error);
         }
 
-        // Refresh Token으로 새 Access Token 발급
-        // TODO: 실제 토큰 갱신 API 구현 후 수정 필요
-        // const response = await axios.post(`${API_BASE_URL}/auth/refresh`, {
-        //   refreshToken
-        // });
-        // const { accessToken } = response.data.data;
-        // localStorage.setItem('accessToken', accessToken);
-        // originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-        // return apiClient(originalRequest);
+        // 토큰 갱신 API 호출
+        const response = await axios.post(`${API_BASE_URL}/auth/refresh`, {
+          refreshToken,
+        });
 
-        // 현재는 토큰 갱신 API가 없으므로 로그아웃 처리
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        window.location.href = "/login";
-        return Promise.reject(error);
+        const {
+          user,
+          accessToken,
+          refreshToken: newRefreshToken,
+        } = response.data;
+        console.log("토큰 갱신 성공:", { user, accessToken, newRefreshToken });
+
+        // 새로운 토큰으로 상태 업데이트
+        useAuthStore.getState().setTokens(user, accessToken, newRefreshToken);
+
+        // 원래 요청을 새로운 토큰으로 재시도
+        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+        console.log("갱신된 토큰으로 원래 요청 재시도");
+        return apiClient(originalRequest);
       } catch (refreshError) {
-        // 토큰 갱신 실패 시 로그아웃
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        window.location.href = "/login";
+        console.error("토큰 갱신 실패:", refreshError);
+        // 토큰 갱신 실패 시 로그아웃 처리
+        useAuthStore.getState().logout();
         return Promise.reject(refreshError);
       }
     }

@@ -25,6 +25,24 @@ const authAPI = {
   },
 
   /**
+   * 사용자 정보 가져오기 (토큰 검증용)
+   * @param {string} accessToken
+   * @returns {Promise}
+   *
+   * NOTE: 현재 백엔드에 /auth/me 엔드포인트가 없어 404 오류 발생
+   * 토큰 유효성 검사는 restoreAuth 함수에서 JWT 디코딩 방식으로 검증
+   */
+  // getMe: async (accessToken) => {
+  //   // 직접 토큰을 헤더에 포함시켜 요청
+  //   const response = await apiClient.get("/auth/me", {
+  //     headers: {
+  //       Authorization: `Bearer ${accessToken}`,
+  //     },
+  //   });
+  //   return response;
+  // },
+
+  /**
    * 로그아웃
    * @param {string} refreshToken
    * @returns {Promise}
