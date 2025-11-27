@@ -86,11 +86,13 @@
   - **기능**: 날짜 클릭 시 사이드바 표시, 할일 CRUD 인터랙션
   - **완료**: 날짜 클릭 로직, 사이드바 인터랙션, 실시간 업데이트
   - **참조**: `docs/extentions/calendar-feature-consolidated.md#calendarfeature-frontend`
-- [ ] **FE-12**: 달력 툴팁 상세 정보 표시 <!-- id: fe-12 -->
-  - **기능**: 할일 마우스 오버 시 제목 외 내용, 마감일 등 상세 정보 표시 (Custom Event Component)
+- [x] **FE-12**: 달력 툴팁 상세 정보 표시 <!-- id: fe-12 -->
+  - **기능**: 할일 마우스 오버 시 제목 외 내용, 마감일 등 상세 정보 표시 (Portal 기반 Custom Event Component)
+  - **완료**: React Portal을 사용한 툴팁 구현, z-index 문제 해결, 할일/공휴일 분기 처리
   - **참조**: `docs/extentions/calendar-feature-consolidated.md#calendarfeature-uiux`
-- [ ] **FE-13**: 주별/일별 보기 구현 <!-- id: fe-13 -->
+- [x] **FE-13**: 주별/일별 보기 구현 <!-- id: fe-13 -->
   - **기능**: 월간 뷰 외에 주간(Week), 일간(Day) 뷰 스타일링 및 기능 점검
+  - **완료**: allDay 플래그 자동 설정 로직 구현, Week/Day 뷰에서 시간대별 일정 표시 지원
   - **참조**: `docs/extentions/calendar-feature-consolidated.md#calendarfeature-uiux`
 - [ ] **BE-07**: KASI API 연동 및 동기화 구현 <!-- id: be-07 -->
   - **기능**: 한국천문연구원 특일 정보 API 연동, 자동/수동 동기화
