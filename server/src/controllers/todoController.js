@@ -196,6 +196,114 @@ class TodoController {
       });
     }
   }
+
+  /**
+   * 휴지통 목록 조회
+   * GET /api/todos/trash/all
+   */
+  async getTrash(req, res) {
+    try {
+      const userId = req.user.userId;
+      const trash = await todoService.getTrash(userId);
+
+      return res.status(200).json({
+        success: true,
+        data: trash,
+      });
+    } catch (error) {
+      console.error("[TodoController] getTrash error:", error);
+      return res.status(500).json({
+        success: false,
+        message: "Internal server error",
+        code: "INTERNAL_ERROR",
+      });
+    }
+  }
+
+  /**
+   * 할일 복구
+   * PATCH /api/todos/:id/restore
+   */
+  async restore(req, res) {
+    try {
+      const userId = req.user.userId;
+      const todoId = parseInt(req.params.id);
+
+      if (isNaN(todoId)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid todo ID",
+          code: "INVALID_ID",
+        });
+      }
+
+      const todo = await todoService.restoreTodo(userId, todoId);
+
+      return res.status(200).json({
+        success: true,
+        message: "Todo restored successfully",
+        data: todo,
+      });
+    } catch (error) {
+      console.error("[TodoController] restore error:", error);
+
+      if (error.code === "NOT_FOUND") {
+        return res.status(404).json({
+          success: false,
+          message: error.message,
+          code: "NOT_FOUND",
+        });
+      }
+
+      return res.status(500).json({
+        success: false,
+        message: "Internal server error",
+        code: "INTERNAL_ERROR",
+      });
+    }
+  }
+
+  /**
+   * 할일 영구 삭제
+   * DELETE /api/todos/:id/permanent
+   */
+  async permanentDelete(req, res) {
+    try {
+      const userId = req.user.userId;
+      const todoId = parseInt(req.params.id);
+
+      if (isNaN(todoId)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid todo ID",
+          code: "INVALID_ID",
+        });
+      }
+
+      await todoService.permanentDeleteTodo(userId, todoId);
+
+      return res.status(200).json({
+        success: true,
+        message: "Todo permanently deleted",
+      });
+    } catch (error) {
+      console.error("[TodoController] permanentDelete error:", error);
+
+      if (error.code === "NOT_FOUND") {
+        return res.status(404).json({
+          success: false,
+          message: error.message,
+          code: "NOT_FOUND",
+        });
+      }
+
+      return res.status(500).json({
+        success: false,
+        message: "Internal server error",
+        code: "INTERNAL_ERROR",
+      });
+    }
+  }
 }
 
 module.exports = new TodoController();

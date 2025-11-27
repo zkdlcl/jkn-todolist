@@ -49,16 +49,20 @@
 - [x] **FE-04**: 할일 스토어 구현 (`useTodoStore`) <!-- id: fe-04 -->
   - **기능**: 상태 관리, API 연동
   - **완료**: todoAPI 서비스, Zustand 스토어(CRUD, 필터링, 정렬) 구현
-- [ ] **FE-05**: 할일 목록 및 아이템 컴포넌트 구현 <!-- id: fe-05 -->
+- [x] **FE-05**: 할일 목록 및 아이템 컴포넌트 구현 <!-- id: fe-05 -->
   - **기능**: 필터링, 정렬, 완료 토글 UI
-- [ ] **FE-06**: 할일 추가/수정 모달 구현 <!-- id: fe-06 -->
+  - **완료**: TodoItem, TodoList 컴포넌트, HomePage 통합, 반응형 레이아웃 구현
+- [x] **FE-06**: 할일 추가/수정 모달 구현 <!-- id: fe-06 -->
+  - **기능**: 폼 유효성 검사, 날짜 선택, 우선순위 설정
+  - **완료**: TodoModal 컴포넌트, HomePage 연동, 유효성 검사 로직 구현
 
 ### 🟣 Phase 4: 휴지통 및 마무리 (Trash & Polish)
 
 > **목표**: 삭제된 할일 복구 기능을 구현하고 UI/UX를 다듬는다.
 
-- [ ] **BE-05**: 휴지통 조회 및 복구 API 구현 <!-- id: be-05 -->
-  - **기능**: `GET /todos/trash`, `PATCH /todos/:id/restore`
+- [x] **BE-05**: 휴지통 조회 및 복구 API 구현 <!-- id: be-05 -->
+  - **기능**: `GET /todos/trash/all`, `PATCH /todos/:id/restore`, `DELETE /todos/:id/permanent`
+  - **완료**: Repository, Service, Controller 메서드 추가, 라우트 설정, 통합 테스트 통과
 - [ ] **FE-07**: 휴지통 페이지 UI 구현 <!-- id: fe-07 -->
 - [x] **FE-08**: 공통 일정(국경일) 더미 데이터 표시 (MVP 범위) <!-- id: fe-08 -->
   - **기능**: 2025년 한국 공휴일 데이터를 `public_events` 테이블에 삽입

@@ -205,6 +205,73 @@ class TodoRepository {
       throw error;
     }
   }
+
+  /**
+   * 휴지통 목록 조회
+   * @param {number} userId
+   * @returns {Promise<Array>}
+   */
+  async findTrash(userId) {
+    const query = `
+      SELECT *
+      FROM todos
+      WHERE user_id = $1 AND deleted_status = 'DELETED'
+      ORDER BY deleted_at DESC
+    `;
+
+    try {
+      const result = await pool.query(query, [userId]);
+      return result.rows;
+    } catch (error) {
+      console.error("[TodoRepository] findTrash error:", error);
+      throw error;
+    }
+  }
+
+  /**
+   * 할일 복구
+   * @param {number} id
+   * @param {number} userId
+   * @returns {Promise<Object|null>}
+   */
+  async restore(id, userId) {
+    const query = `
+      UPDATE todos
+      SET deleted_status = 'ACTIVE', deleted_at = NULL, updated_at = NOW()
+      WHERE id = $1 AND user_id = $2 AND deleted_status = 'DELETED'
+      RETURNING *
+    `;
+
+    try {
+      const result = await pool.query(query, [id, userId]);
+      return result.rows[0] || null;
+    } catch (error) {
+      console.error("[TodoRepository] restore error:", error);
+      throw error;
+    }
+  }
+
+  /**
+   * 할일 영구 삭제
+   * @param {number} id
+   * @param {number} userId
+   * @returns {Promise<boolean>}
+   */
+  async permanentDelete(id, userId) {
+    const query = `
+      DELETE FROM todos
+      WHERE id = $1 AND user_id = $2 AND deleted_status = 'DELETED'
+      RETURNING id
+    `;
+
+    try {
+      const result = await pool.query(query, [id, userId]);
+      return result.rowCount > 0;
+    } catch (error) {
+      console.error("[TodoRepository] permanentDelete error:", error);
+      throw error;
+    }
+  }
 }
 
 module.exports = new TodoRepository();

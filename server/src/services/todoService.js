@@ -100,10 +100,6 @@ class TodoService {
       }
     }
 
-    // 기존 할일 조회 (날짜 하나만 업데이트하는 경우를 위해 기존 데이터 필요할 수 있음 - 여기서는 간단히 처리)
-    // 만약 start_date만 업데이트하는데 기존 due_date보다 늦으면? -> 이 부분은 클라이언트나 더 정교한 로직에서 처리 권장
-    // 여기서는 입력된 값들끼리의 비교만 수행
-
     const updatedTodo = await todoRepository.update(todoId, userId, updates);
 
     if (!updatedTodo) {
@@ -131,6 +127,51 @@ class TodoService {
     }
 
     return deletedTodo;
+  }
+
+  /**
+   * 휴지통 목록 조회
+   * @param {number} userId
+   * @returns {Promise<Array>}
+   */
+  async getTrash(userId) {
+    return await todoRepository.findTrash(userId);
+  }
+
+  /**
+   * 할일 복구
+   * @param {number} userId
+   * @param {number} todoId
+   * @returns {Promise<Object>}
+   */
+  async restoreTodo(userId, todoId) {
+    const restoredTodo = await todoRepository.restore(todoId, userId);
+
+    if (!restoredTodo) {
+      const error = new Error("Todo not found in trash");
+      error.code = "NOT_FOUND";
+      throw error;
+    }
+
+    return restoredTodo;
+  }
+
+  /**
+   * 할일 영구 삭제
+   * @param {number} userId
+   * @param {number} todoId
+   * @returns {Promise<boolean>}
+   */
+  async permanentDeleteTodo(userId, todoId) {
+    const isDeleted = await todoRepository.permanentDelete(todoId, userId);
+
+    if (!isDeleted) {
+      const error = new Error("Todo not found in trash");
+      error.code = "NOT_FOUND";
+      throw error;
+    }
+
+    return true;
   }
 }
 
