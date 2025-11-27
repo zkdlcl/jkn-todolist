@@ -65,10 +65,11 @@ jkn-todolist/
 - [6. 기술 아키텍처](docs/6-technical-architecture.md)
 - [7. 실행 계획 (Implementation Plan)](docs/7-implementation_plan.md) ⭐
 - [8. 와이어프레임](docs/8-wireframes.md)
+- [9. 문서 정비용 프롬프트](docs/9-documentation-checklist.md)
 
 ### 확장 기능 문서
 
-- [9. 달력 기능 명세서](docs/extentions/9-calendar-feature.md)
+- [달력 기능 명세서](docs/extentions/9-calendar-feature.md)
 - [달력 개발 요약](docs/extentions/calendar-development-summary.md)
 - [확장 목표](docs/extentions/확장목표)
 

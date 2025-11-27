@@ -69,6 +69,28 @@
 - [x] **FE-08**: 공통 일정(국경일) 더미 데이터 표시 (MVP 범위) <!-- id: fe-08 -->
   - **기능**: 2025년 한국 공휴일 데이터를 `public_events` 테이블에 삽입
 
+### 🟡 Phase 5: 달력 기능 확장 (Calendar Feature Extension)
+
+> **목표**: 월간 달력 뷰를 통해 할일을 시각적으로 관리하고, 국경일 정보를 함께 표시
+> **의존성**: Phase 4 완료, 공공데이터포털 API 키 확보
+
+- [ ] **BE-06**: 달력 데이터 조회 API 구현 <!-- id: be-06 -->
+  - **기능**: `GET /api/calendar/:year/:month`, 해당 월의 할일 및 공휴일 통합 조회
+  - **완료**: CalendarRepository, CalendarService, CalendarController, 통합 테스트
+  - **참조**: `docs/extentions/calendar-feature-consolidated.md#calendarfeature-backend-implementation`
+- [ ] **FE-09**: 달력 UI 구현 <!-- id: fe-09 -->
+  - **기능**: 월간 달력 표시, 날짜별 할일 표시, react-calendar 통합
+  - **완료**: CalendarPage, CalendarView, DayCell, TodoSidebar 컴포넌트 구현
+  - **참조**: `docs/extentions/calendar-feature-consolidated.md#calendarfeature-frontend`
+- [ ] **FE-10**: 달력 인터랙션 구현 <!-- id: fe-10 -->
+  - **기능**: 날짜 클릭 시 사이드바 표시, 할일 CRUD 인터랙션
+  - **완료**: 날짜 클릭 로직, 사이드바 인터랙션, 실시간 업데이트
+  - **참조**: `docs/extentions/calendar-feature-consolidated.md#calendarfeature-frontend`
+- [ ] **BE-07**: KASI API 연동 및 동기화 구현 <!-- id: be-07 -->
+  - **기능**: 한국천문연구원 특일 정보 API 연동, 자동/수동 동기화
+  - **완료**: KasiAPIService, PublicEventSyncService, 동기화 스크립트, 테스트
+  - **참조**: `docs/extentions/calendar-feature-consolidated.md#calendarfeature-kasi-api-integration`
+
 3.  **중간 점검**: 각 Phase가 끝날 때마다 통합 테스트를 수행합니다.
 
 ## 4. 부록: 데이터베이스 세팅 정보

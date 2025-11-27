@@ -157,11 +157,11 @@ UI/UX 디자인 가이드 및 와이어프레임
 
 ## 🚀 확장 기능 문서
 
-### 9. 달력 기능 명세서
+### 9. 달력 기능 명세서 (통합)
 
-**파일**: `extentions/9-calendar-feature.md`
+**파일**: `extentions/calendar-feature-consolidated.md`
 
-달력 뷰 기능 상세 명세
+달력 뷰 기능 통합 명세 (@--- 마커 기반)
 
 **주요 내용**:
 
@@ -170,6 +170,19 @@ UI/UX 디자인 가이드 및 와이어프레임
 - 기능 요구사항 (UI, 백엔드 API)
 - 기술 명세 (react-calendar)
 - 개발 순서
+- API 연동 세부 정보
+- 확장성 고려 사항
+
+**@--- 마커 기반 섹션**:
+
+- `@CalendarFeature-Overview` - 기능 개요
+- `@CalendarFeature-API-Integration` - API 연동
+- `@CalendarFeature-UserScenarios` - 사용자 시나리오
+- `@CalendarFeature-Requirements` - 요구사항
+- `@CalendarFeature-BackendAPI` - 백엔드 API
+- `@CalendarFeature-Frontend` - 프론트엔드 구현
+- `@CalendarFeature-Extensibility` - 확장성
+- `@CalendarFeature-Implementation-Guidelines` - 구현 가이드
 
 ### 달력 개발 요약
 
@@ -188,6 +201,12 @@ UI/UX 디자인 가이드 및 와이어프레임
 **파일**: `extentions/확장목표`
 
 향후 확장 기능 아이디어
+
+### 확장 문서 README
+
+**파일**: `extentions/README.md`
+
+확장 기능 문서 구조 및 사용법 안내
 
 ---
 
