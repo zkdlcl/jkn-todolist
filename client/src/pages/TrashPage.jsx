@@ -1,15 +1,26 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 import useAuthStore from "../stores/useAuthStore";
 import useTodoStore from "../stores/useTodoStore";
+import { showSuccess, showError } from "../utils/notification";
+import ConfirmModal from "../components/ConfirmModal";
 
 function TrashPage() {
   const navigate = useNavigate();
   const { user, logout, isAuthenticated } = useAuthStore();
   const { trash, trashLoading, fetchTrash, restoreTodo, permanentDeleteTodo } =
     useTodoStore();
+
+  // Confirm modal state
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    action: null,
+    title: '',
+    message: '',
+    itemId: null
+  });
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -25,25 +36,48 @@ function TrashPage() {
   };
 
   const handleRestore = async (id) => {
-    if (window.confirm("이 할일을 복구하시겠습니까?")) {
-      const result = await restoreTodo(id);
+    setConfirmModal({
+      isOpen: true,
+      action: 'restore',
+      title: '할일 복구',
+      message: '이 할일을 복구하시겠습니까?',
+      itemId: id
+    });
+  };
+
+  const handlePermanentDelete = async (id) => {
+    setConfirmModal({
+      isOpen: true,
+      action: 'delete',
+      title: '할일 영구 삭제',
+      message: '정말 영구 삭제하시겠습니까?\n\n영구 삭제 후 복구할 수 없습니다.',
+      itemId: id
+    });
+  };
+
+  const handleConfirm = async () => {
+    const { action, itemId } = confirmModal;
+    setConfirmModal({ ...confirmModal, isOpen: false });
+
+    if (action === 'restore') {
+      const result = await restoreTodo(itemId);
       if (result.success) {
-        alert("할일이 복구되었습니다.");
+        showSuccess("할일이 복구되었습니다.");
+      } else {
+        showError(result.error || "복구에 실패했습니다.");
+      }
+    } else if (action === 'delete') {
+      const result = await permanentDeleteTodo(itemId);
+      if (result.success) {
+        showSuccess("할일이 영구 삭제되었습니다.");
+      } else {
+        showError(result.error || "영구 삭제에 실패했습니다.");
       }
     }
   };
 
-  const handlePermanentDelete = async (id) => {
-    if (
-      window.confirm(
-        "정말 영구 삭제하시겠습니까?\n\n영구 삭제 후 복구할 수 없습니다."
-      )
-    ) {
-      const result = await permanentDeleteTodo(id);
-      if (result.success) {
-        alert("할일이 영구 삭제되었습니다.");
-      }
-    }
+  const handleCancel = () => {
+    setConfirmModal({ ...confirmModal, isOpen: false });
   };
 
   const formatDate = (dateString) => {
@@ -91,6 +125,16 @@ function TrashPage() {
 
       {/* 메인 컨텐츠 */}
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Confirm Modal */}
+        <ConfirmModal
+          isOpen={confirmModal.isOpen}
+          title={confirmModal.title}
+          message={confirmModal.message}
+          onConfirm={handleConfirm}
+          onClose={handleCancel}
+          confirmText="확인"
+          cancelText="취소"
+        />
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* 사이드바 (메뉴) */}
           <div className="lg:col-span-1 space-y-1">

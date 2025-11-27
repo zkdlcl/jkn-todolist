@@ -4,6 +4,7 @@ import useAuthStore from "../stores/useAuthStore";
 import TodoList from "../components/TodoList";
 import TodoModal from "../components/TodoModal";
 import syncAPI from "../api/syncAPI";
+import { showInfo, showSuccess, showError, showConfirm } from "../utils/notification";
 
 function HomePage() {
   const navigate = useNavigate();
@@ -45,27 +46,11 @@ function HomePage() {
 
   // 공휴일 동기화
   const handleSync = async () => {
-    if (isSyncing) return;
-
+    // 공휴일 동기화는 서버에서 CLI 명령어로 수행하도록 변경
     const currentYear = new Date().getFullYear();
-    const confirmed = window.confirm(
-      `${currentYear}년 공휴일 데이터를 동기화하시겠습니까?\n(공휴일, 기념일, 24절기, 잡절 포함)`
+    showInfo(
+      `공휴일 동기화는 CLI 명령어로 수행해주세요. 서버 디렉토리에서 다음 명령어를 실행하세요: node scripts/syncHolidays.js ${currentYear}. 기본값으로 현재 연도(${currentYear})가 사용됩니다.`
     );
-
-    if (!confirmed) return;
-
-    setIsSyncing(true);
-    try {
-      const response = await syncAPI.syncHolidays(currentYear);
-      if (response.data.success) {
-        alert(`동기화 완료!\n총 ${response.data.data.totalAdded}개 항목 추가`);
-      }
-    } catch (error) {
-      console.error("Sync error:", error);
-      alert("동기화 실패: " + (error.response?.data?.message || error.message));
-    } finally {
-      setIsSyncing(false);
-    }
   };
 
   if (!isAuthenticated) {

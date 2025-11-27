@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import useTodoStore from "../stores/useTodoStore";
+import { showError, showSuccess } from "../utils/notification";
 
 function TodoModal({ isOpen, onClose, todoToEdit }) {
   const { addTodo, updateTodo, isLoading } = useTodoStore();
@@ -77,9 +78,10 @@ function TodoModal({ isOpen, onClose, todoToEdit }) {
     }
 
     if (result.success) {
+      showSuccess(todoToEdit ? "할일이 수정되었습니다." : "할일이 추가되었습니다.");
       onClose();
     } else {
-      alert(result.error || "작업에 실패했습니다.");
+      showError(result.error || "작업에 실패했습니다.");
     }
   };
 

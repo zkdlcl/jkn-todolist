@@ -5,7 +5,7 @@ MVP 개발 기간이 짧아 빠르게 구현해야 하므로 main 브랜치에�
 
 ### 작업 내용
 
-- 이슈 확인 : gh cli 도구를 이용해 Issue 내용과 docs/2-prd-product-requirements.md, docs/7-implementation_plan.md 문서를 읽어와 적절한 서브에이전트를 이용해 분석한다.
+- 이슈 확인 : gh cli 도구를 이용해 Issue 내용과 docs/2-prd-product-requirements.md, docs/7-implementation_plan.md, QWEN.md 문서를 읽어와 적절한 서브에이전트를 이용해 분석한다.
 - 기존 코드 분석 : 적절한 서브에이전트를 사용해 swagger/swagger.json과 코드베이스(react frontend 디렉토리)의 코드를 분석한다.
 - 계획 수립 : 기존 코드 분석한 결과와 분석된 Issue 내용을 바탕으로 간단한 구현 계획을 수립한다.
 - 문제 해결 : 수립된 계획을 바탕으로 프론트엔드 개발에 적합한 서브에이전트를 선택해서 해결한다.

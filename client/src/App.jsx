@@ -17,29 +17,31 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignupPage />} />
-        <Route
-          path="/"
-          element={
-            isAuthenticated ? <HomePage /> : <Navigate to="/login" replace />
-          }
-        />
-        <Route
-          path="/trash"
-          element={
-            isAuthenticated ? <TrashPage /> : <Navigate to="/login" replace />
-          }
-        />
-        <Route
-          path="/calendar"
-          element={
-            isAuthenticated ? <CalendarPage /> : <Navigate to="/login" replace />
-          }
-        />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+      <div className="relative">
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignupPage />} />
+          <Route
+            path="/"
+            element={
+              isAuthenticated ? <HomePage /> : <Navigate to="/login" replace />
+            }
+          />
+          <Route
+            path="/trash"
+            element={
+              isAuthenticated ? <TrashPage /> : <Navigate to="/login" replace />
+            }
+          />
+          <Route
+            path="/calendar"
+            element={
+              isAuthenticated ? <CalendarPage /> : <Navigate to="/login" replace />
+            }
+          />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </div>
     </BrowserRouter>
   );
 }

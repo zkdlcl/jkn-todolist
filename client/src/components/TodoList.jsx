@@ -1,6 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import useTodoStore from "../stores/useTodoStore";
 import TodoItem from "./TodoItem";
+import ConfirmModal from "./ConfirmModal";
+import { showError } from "../utils/notification";
 
 function TodoList({ onEdit }) {
   const {
@@ -16,6 +18,12 @@ function TodoList({ onEdit }) {
     setSort,
   } = useTodoStore();
 
+  // Confirm modal state
+  const [confirmModal, setConfirmModal] = useState({
+    isOpen: false,
+    itemId: null
+  });
+
   useEffect(() => {
     fetchTodos();
   }, [fetchTodos]);
@@ -25,9 +33,22 @@ function TodoList({ onEdit }) {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm("정말 삭제하시겠습니까? 휴지통으로 이동합니다.")) {
-      await deleteTodo(id);
+    setConfirmModal({
+      isOpen: true,
+      itemId: id
+    });
+  };
+
+  const handleConfirmDelete = async () => {
+    setConfirmModal({ ...confirmModal, isOpen: false });
+    const result = await deleteTodo(confirmModal.itemId);
+    if (!result.success) {
+      showError(result.error || "삭제에 실패했습니다.");
     }
+  };
+
+  const handleCancelDelete = () => {
+    setConfirmModal({ ...confirmModal, isOpen: false });
   };
 
   if (isLoading && todos.length === 0) {
@@ -104,6 +125,17 @@ function TodoList({ onEdit }) {
           </select>
         </div>
       </div>
+
+      {/* Confirm Modal */}
+      <ConfirmModal
+        isOpen={confirmModal.isOpen}
+        title="할일 삭제"
+        message="정말 삭제하시겠습니까? 휴지통으로 이동합니다."
+        onConfirm={handleConfirmDelete}
+        onClose={handleCancelDelete}
+        confirmText="삭제"
+        cancelText="취소"
+      />
 
       {/* 할일 목록 */}
       <div className="space-y-3">
