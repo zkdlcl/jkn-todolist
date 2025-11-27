@@ -103,7 +103,10 @@ function HomePage() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* 사이드바 (메뉴) */}
           <div className="lg:col-span-1 space-y-1">
-            <button className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-blue-700 bg-blue-50 rounded-md">
+            <button
+              className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-blue-700 bg-blue-50 rounded-md"
+              onClick={() => navigate("/")}
+            >
               <svg
                 className="w-5 h-5"
                 fill="none"
@@ -137,6 +140,25 @@ function HomePage() {
                 />
               </svg>
               휴지통
+            </button>
+            <button
+              className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-md"
+              onClick={() => navigate("/calendar")}
+            >
+              <svg
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+              달력
             </button>
           </div>
 

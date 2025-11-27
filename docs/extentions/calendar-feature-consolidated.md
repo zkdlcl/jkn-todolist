@@ -249,15 +249,15 @@ CalendarPage/
 
 ```javascript
 // calendarRepository.js
-getTodosByMonth(userId, year, month)
-getPublicEventsByMonth(year, month)
+getTodosByMonth(userId, year, month);
+getPublicEventsByMonth(year, month);
 ```
 
 ### 새 Service 메서드
 
 ```javascript
 // calendarService.js
-getCalendarData(userId, year, month)
+getCalendarData(userId, year, month);
 ```
 
 ### 새 Controller & Routes
@@ -385,6 +385,31 @@ class PublicEventSyncService {
 - 마감 임박: 주황색 배경 (#F59E0B)
 - 과거: 회색 (#9CA3AF)
 
+### Figma MCP 활용
+
+달력 기능의 UI/UX 설계는 Figma MCP를 통해 다음과 같이 지원됩니다:
+
+1. **디자인 시스템 접근**:
+
+   - Figma에서 정의된 색상, 폰트, 간격 등 스타일 가이드를 실시간으로 가져오기
+   - 컴포넌트 라이브러리 및 디자인 토큰 참조
+
+2. **와이어프레임 검토**:
+
+   - Figma에 저장된 와이어프레임을 MCP를 통해 직접 참조
+   - 사용자 흐름 및 인터랙션 시각적으로 확인
+
+3. **시각적 일관성 유지**:
+
+   - Figma의 컴포넌트 구조를 바탕으로 React 컴포넌트 설계
+   - 디자인 시스템과 코드 구현 간의 일관성 유지
+
+4. **UI/UX 프로토타이핑**:
+   - Figma 내 제스처 및 인터랙션 설정을 실제 구현에 반영
+   - 사용자 경험 흐름 검증
+
+> **참고**: Figma MCP를 사용하려면 `FIGMA_ACCESS_TOKEN` 환경 변수를 설정하고, 대상 Figma 파일에 접근 권한이 있어야 합니다.
+
 ---
 
 ## @CalendarFeature-Development-Phases
@@ -405,14 +430,25 @@ class PublicEventSyncService {
 
 ### Phase 3: 인터랙션 (FE-10)
 
-1. 날짜 클릭 시 사이드바 표시
-2. 사이드바에서 할일 추가/수정/삭제
-3. 달력 실시간 업데이트
+- [x] 날짜 클릭 시 사이드바 표시 (완료)
+- [x] 사이드바에서 할일 추가/수정/삭제 (완료)
+- [x] 달력 실시간 업데이트 (완료)
+
+### Phase 3.5: UI/UX 개선 (FE-12, FE-13)
+
+1.  **상세 정보 툴팁 (FE-12)**
+
+    - 할일 이벤트 마우스 오버 시 Popover/Tooltip 표시
+    - 표시 정보: 제목, 내용(일부), 마감일시, 우선순위
+    - 커스텀 Event 컴포넌트 구현
+
+2.  **주별/일별 보기 구현 (FE-13)**
+    - `react-big-calendar`의 Week, Day 뷰 활성화
+    - 시간대별 일정 표시 스타일링
+    - 헤더 및 네비게이션 연동 확인
 
 ### Phase 4: KASI API 연동 (BE-07)
 
-1. kasiAPIService 구현
-2. publicEventSyncService 구현
 3. 동기화 스크립트 작성
 4. 환경 변수 설정
 5. 테스트 및 검증
@@ -475,17 +511,20 @@ CREATE TABLE public_events (
 #### 백엔드 확장
 
 **API 레이어**:
+
 - `calendarService.js`는 확장 가능한 구조로 설계
 - `kasiAPIService.js`는 다양한 API 엔드포인트를 추가할 수 있도록 확장 설계
 - `publicEventSyncService.js`는 다양한 이벤트 타입을 처리할 수 있도록 설계
 
 **DB 레이어**:
+
 - `public_events` 테이블의 `event_type` 필드를 통해 다양한 이벤트 타입 확장
 - `event_type` 필드 값: `NATIONAL_HOLIDAY`, `MEMORIAL_DAY`, `SOLAR_TERM`, `SEASONAL_DAY`, `OTHER`
 
 #### 프론트엔드 확장
 
 **UI/UX 확장**:
+
 - `CalendarView` 컴포넌트는 다른 뷰(주간, 일간)로 확장 가능하도록 설계
 - `DayCell` 컴포넌트는 다양한 이벤트 타입 표시 가능
 - `TodoSidebar`는 다양한 날짜 기반 인터랙션 확장을 고려
@@ -528,6 +567,7 @@ CREATE TABLE public_events (
 #### 백엔드 모듈 확장
 
 **새로운 API 엔드포인트 추가**:
+
 1. `routes/`에 새 라우트 파일 생성
 2. `controller/`에 새 컨트롤러 생성
 3. `service/`에 비즈니스 로직 추가
@@ -535,6 +575,7 @@ CREATE TABLE public_events (
 5. `middleware/`에 필요한 미들웨어 추가
 
 **새로운 이벤트 타입 추가**:
+
 1. `public_events` 테이블에 새로운 `event_type` 값 추가
 2. `kasiAPIService.js`에 새 엔드포인트 메서드 추가
 3. `publicEventSyncService.js`에 동기화 로직 추가
@@ -542,12 +583,14 @@ CREATE TABLE public_events (
 #### 프론트엔드 모듈 확장
 
 **새로운 UI 컴포넌트 추가**:
+
 1. `client/src/components/`에 새 컴포넌트 폴더 생성
 2. `client/src/store/`에 필요한 store 확장
 3. `client/src/pages/`에 새 페이지 추가 (필요시)
 4. `client/src/services/`에 API 호출 함수 추가
 
 **새로운 기능 통합**:
+
 1. `useCalendarStore`에 새로운 상태 추가
 2. 컴포넌트에 새로운 기능 통합
 3. 사용자 인터랙션 로직 구현
@@ -568,19 +611,22 @@ CREATE TABLE public_events (
 다음 단계로 **BE-06 (달력 데이터 조회 API 구현)**부터 시작할 수 있습니다!
 
 1. CalendarRepository 생성
+
    ```javascript
    // repository/calendarRepository.js
-   getTodosByMonth(userId, year, month)
-   getPublicEventsByMonth(year, month)
+   getTodosByMonth(userId, year, month);
+   getPublicEventsByMonth(year, month);
    ```
 
 2. CalendarService 생성
+
    ```javascript
    // service/calendarService.js
-   getCalendarData(userId, year, month)
+   getCalendarData(userId, year, month);
    ```
 
 3. CalendarController & Routes 생성
+
    ```javascript
    // controller/calendarController.js
    getCalendarData(req, res)
@@ -592,12 +638,14 @@ CREATE TABLE public_events (
 ### 환경 변수 설정
 
 **server/.env**:
+
 ```env
 KASI_API_KEY=18ea54df0b7fb1a213f35c5c200ea36433a9eed33d1d8c9585a7f10c6e54a33e
 KASI_API_BASE_URL=http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService
 ```
 
 **server/.env.example**:
+
 ```env
 KASI_API_KEY=your_kasi_api_key_here
 KASI_API_BASE_URL=http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService

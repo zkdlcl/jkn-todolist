@@ -1,0 +1,3 @@
+{
+  "enabledMcpjsonServers": ["postgresql-mcp", "context7"]
+}

@@ -5,6 +5,7 @@ import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import HomePage from "./pages/HomePage";
 import TrashPage from "./pages/TrashPage";
+import CalendarPage from "./pages/CalendarPage";
 
 function App() {
   const { restoreAuth, isAuthenticated } = useAuthStore();
@@ -29,6 +30,12 @@ function App() {
           path="/trash"
           element={
             isAuthenticated ? <TrashPage /> : <Navigate to="/login" replace />
+          }
+        />
+        <Route
+          path="/calendar"
+          element={
+            isAuthenticated ? <CalendarPage /> : <Navigate to="/login" replace />
           }
         />
         <Route path="*" element={<Navigate to="/" replace />} />

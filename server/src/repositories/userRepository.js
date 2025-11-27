@@ -77,6 +77,29 @@ class UserRepository {
       throw error;
     }
   }
+
+  /**
+   * 날짜 범위로 공공 일정(국경일 등) 조회
+   * @param {Date} startDate
+   * @param {Date} endDate
+   * @returns {Promise<Array>}
+   */
+  async findPublicEventsByDateRange(startDate, endDate) {
+    const query = `
+      SELECT id, event_name, event_date, is_holiday, created_at
+      FROM public_events
+      WHERE event_date BETWEEN $1 AND $2
+      ORDER BY event_date ASC
+    `;
+
+    try {
+      const result = await pool.query(query, [startDate, endDate]);
+      return result.rows;
+    } catch (error) {
+      console.error("[UserRepository] findPublicEventsByDateRange error:", error);
+      throw error;
+    }
+  }
 }
 
 module.exports = new UserRepository();

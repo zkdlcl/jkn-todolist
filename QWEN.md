@@ -17,6 +17,7 @@ JKN-TODOLIST is an authentication-based ToDoList application designed for users 
 - Public holidays management for all users
 - Todo filtering, sorting, and priority management
 - Role-based access control (USER/ADMIN)
+- Calendar view to visualize todos and public holidays with date localization
 
 ### Architecture & Tech Stack
 
@@ -38,6 +39,13 @@ The project follows a layered architecture with clear separation of concerns:
 - Services: Implement business logic
 - Repositories: Handle database operations
 - Middlewares: Authentication, validation, error handling
+
+### State Management
+
+- Use Zustand for state management in React components
+- Import stores using default imports (e.g., `import useTodoStore from '../stores/useTodoStore'`)
+- Destructure needed functions and state from the store hook directly in components
+- Ensure all date-related functionality is properly localized using date-fns with appropriate locale settings
 
 ### Naming Conventions
 
@@ -65,6 +73,7 @@ The project follows a layered architecture with clear separation of concerns:
 6. Date/time management with start/due dates
 7. Public holidays management (admin only)
 8. Filter and sort todos
+9. Calendar view to visualize todos and public holidays (added with react-big-calendar)
 
 ### Security Requirements
 

@@ -189,7 +189,12 @@ function TodoModal({ isOpen, onClose, todoToEdit }) {
               <div className="relative">
                 <input
                   id="due_date"
-                  type="datetime-local"
+                  type={watch("due_date") ? "datetime-local" : "text"}
+                  placeholder="마감기한 없음"
+                  onFocus={(e) => (e.target.type = "datetime-local")}
+                  onBlur={(e) => {
+                    if (!e.target.value) e.target.type = "text";
+                  }}
                   {...register("due_date", {
                     validate: (value) => {
                       if (!value || !startDate) return true;
@@ -199,16 +204,10 @@ function TodoModal({ isOpen, onClose, todoToEdit }) {
                       );
                     },
                   })}
-                  value={dueDate || ""} //
                   className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm ${
                     errors.due_date ? "border-red-500" : "border-gray-300"
-                  } ${!dueDate ? "text-gray-400" : "text-gray-900"}`}
+                  } ${!watch("due_date") ? "text-gray-500" : "text-gray-900"}`}
                 />
-                {!dueDate && (
-                  <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-sm text-gray-400 pointer-events-none bg-white px-1">
-                    마감 기한 미지정
-                  </span>
-                )}
               </div>
               {errors.due_date && (
                 <p className="mt-1 text-xs text-red-600">

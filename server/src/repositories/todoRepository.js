@@ -272,6 +272,36 @@ class TodoRepository {
       throw error;
     }
   }
+
+  /**
+   * 날짜 범위로 할일 조회
+   * @param {number} userId
+   * @param {Date} startDate
+   * @param {Date} endDate
+   * @returns {Promise<Array>}
+   */
+  async findByDateRange(userId, startDate, endDate) {
+    const query = `
+      SELECT *
+      FROM todos
+      WHERE user_id = $1
+        AND deleted_status = 'ACTIVE'
+        AND (
+          (start_date IS NOT NULL AND start_date BETWEEN $2 AND $3) OR
+          (due_date IS NOT NULL AND due_date BETWEEN $2 AND $3) OR
+          (start_date IS NULL AND due_date IS NULL AND created_at BETWEEN $2 AND $3)
+        )
+      ORDER BY created_at DESC
+    `;
+
+    try {
+      const result = await pool.query(query, [userId, startDate, endDate]);
+      return result.rows;
+    } catch (error) {
+      console.error("[TodoRepository] findByDateRange error:", error);
+      throw error;
+    }
+  }
 }
 
 module.exports = new TodoRepository();

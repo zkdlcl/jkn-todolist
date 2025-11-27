@@ -16,9 +16,11 @@ app.use(express.json());
 // Routes
 const authRoutes = require("./src/routes/authRoutes");
 const todoRoutes = require("./src/routes/todoRoutes");
+const calendarRoutes = require("./src/routes/calendarRoutes");
 
 app.use("/api/auth", authRoutes);
 app.use("/api/todos", todoRoutes);
+app.use("/api/calendar", calendarRoutes);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Health check endpoint

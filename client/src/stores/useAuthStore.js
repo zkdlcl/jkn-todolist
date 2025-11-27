@@ -138,14 +138,20 @@ const useAuthStore = create(
         if (accessToken && refreshToken) {
           try {
             // JWT 토큰의 유효성만 확인 (디코딩으로 만료 시간 확인)
-            const tokenPayload = JSON.parse(atob(accessToken.split('.')[1]));
+            const tokenPayload = JSON.parse(atob(accessToken.split(".")[1]));
             const isTokenExpired = tokenPayload.exp * 1000 < Date.now();
 
             if (isTokenExpired) {
               console.log("액세스 토큰이 만료됨, 리프레시 토큰으로 갱신 시도");
               // 토큰이 만료된 경우 서버에 갱신 요청
-              const response = await apiClient.post("/auth/refresh", { refreshToken });
-              const { user, accessToken: newAccessToken, refreshToken: newRefreshToken } = response.data;
+              const response = await apiClient.post("/auth/refresh", {
+                refreshToken,
+              });
+              const {
+                user,
+                accessToken: newAccessToken,
+                refreshToken: newRefreshToken,
+              } = response.data;
 
               // 새로운 토큰으로 상태 업데이트
               set({
@@ -165,7 +171,7 @@ const useAuthStore = create(
               const user = {
                 id: tokenPayload.userId,
                 email: tokenPayload.email,
-                role: tokenPayload.role
+                role: tokenPayload.role,
               };
 
               set({
@@ -177,7 +183,10 @@ const useAuthStore = create(
               console.log("저장된 토큰이 유효하여 상태 업데이트 완료");
             }
           } catch (error) {
-            console.error("restoreAuth - 토큰 유효성 검증 또는 갱신 실패:", error);
+            console.error(
+              "restoreAuth - 토큰 유효성 검증 또는 갱신 실패:",
+              error
+            );
             // 토큰이 유효하지 않거나 갱신에 실패하면 로컬 스토리지에서 제거
             localStorage.removeItem("accessToken");
             localStorage.removeItem("refreshToken");
