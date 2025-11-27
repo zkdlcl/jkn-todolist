@@ -43,10 +43,12 @@
 > **목표**: 할일 생성, 조회, 수정, 삭제(Soft Delete) 기능을 구현한다.
 > **의존성**: Phase 2 완료 (인증된 사용자만 접근 가능)
 
-- [ ] **BE-04**: 할일 CRUD API 구현 (`TodoController`) <!-- id: be-04 -->
+- [x] **BE-04**: 할일 CRUD API 구현 (`TodoController`) <!-- id: be-04 -->
   - **기능**: `POST /todos`, `GET /todos`, `PATCH /todos/:id`, `DELETE /todos/:id`
-- [ ] **FE-04**: 할일 스토어 구현 (`useTodoStore`) <!-- id: fe-04 -->
+  - **완료**: TodoRepository, TodoService, TodoController, 라우트 구현, 통합 테스트 통과
+- [x] **FE-04**: 할일 스토어 구현 (`useTodoStore`) <!-- id: fe-04 -->
   - **기능**: 상태 관리, API 연동
+  - **완료**: todoAPI 서비스, Zustand 스토어(CRUD, 필터링, 정렬) 구현
 - [ ] **FE-05**: 할일 목록 및 아이템 컴포넌트 구현 <!-- id: fe-05 -->
   - **기능**: 필터링, 정렬, 완료 토글 UI
 - [ ] **FE-06**: 할일 추가/수정 모달 구현 <!-- id: fe-06 -->

@@ -19,7 +19,6 @@
 - 완벽함보다 **작동하는 제품**을 우선시
 - 과도한 추상화 지양, **명확하고 단순한 구조** 추구
 - 향후 확장을 고려하되 **현재 요구사항에 집중**
-- 품질과 속도의 균형: **70% 테스트 커버리지로 안정성 확보**
 
 ### 1.2 SOLID 원칙 적용
 
@@ -114,8 +113,6 @@ class TodoRepository extends BaseRepository {
 
 **실전 예시**:
 
-
-
 ### 1.3 DRY (Don't Repeat Yourself)
 
 **적용 전략**:
@@ -123,7 +120,6 @@ class TodoRepository extends BaseRepository {
 - 공통 로직은 유틸리티 함수/모듈로 추출
 - 중복 코드 발견 시 **즉시 리팩토링**
 - 설정 값은 환경 변수나 상수 파일로 중앙 관리
-
 
 ### 1.4 KISS (Keep It Simple, Stupid)
 
@@ -150,10 +146,9 @@ class TodoRepository extends BaseRepository {
 ### 1.6 프로젝트 가치
 
 1. **속도**: 3일 내 MVP 출시 (Phase 0-2)
-2. **품질**: 70% 테스트 커버리지로 안정성 보장
-3. **확장성**: Phase 3-5 기능 추가를 위한 구조적 유연성
-4. **유지보수성**: 명확한 코드 구조와 문서화
-5. **보안**: JWT, bcrypt, HTTPS, CORS 등 기본 보안 강화
+2. **확장성**: Phase 3-5 기능 추가를 위한 구조적 유연성
+3. **유지보수성**: 명확한 코드 구조와 문서화
+4. **보안**: JWT, bcrypt, HTTPS, CORS 등 기본 보안 강화
 
 ---
 
@@ -611,6 +606,7 @@ function TodoListPage() {
 
 - 삼항 연산자 또는 `&&` 연산자 사용
 - 복잡한 조건은 별도 변수/함수로 추출
+
 ### 3.5 주석 및 문서화
 
 #### 3.5.1 JSDoc 주석
@@ -646,13 +642,6 @@ function TodoListPage() {
   /--------------\
 ```
 
-**목표**:
-
-- **전체 커버리지 70% 이상**
-- 단위 테스트: 70%
-- 통합 테스트: 20%
-- E2E 테스트: 10%
-
 #### 4.1.2 테스트 도구
 
 **백엔드**:
@@ -676,7 +665,6 @@ function TodoListPage() {
 - Service Layer 비즈니스 로직
 - 유틸리티 함수
 - 검증 로직
-
 
 #### 4.2.2 프론트엔드 단위 테스트
 
@@ -705,8 +693,6 @@ function TodoListPage() {
 
 **도구**: Playwright 또는 Cypress (선택)
 
-### 4.5 70% 커버리지 목표 달성 방법
-
 #### 4.5.1 우선순위 기반 테스트 작성
 
 **High Priority** (반드시 테스트):
@@ -726,37 +712,6 @@ function TodoListPage() {
 
 - UI 스타일링
 - 간단한 유틸리티 함수
-
-#### 4.5.2 테스트 커버리지 측정
-
-**설정**:
-
-```json
-// package.json
-{
-  "scripts": {
-    "test": "jest",
-    "test:coverage": "jest --coverage",
-    "test:watch": "jest --watch"
-  },
-  "jest": {
-    "coverageThreshold": {
-      "global": {
-        "branches": 70,
-        "functions": 70,
-        "lines": 70,
-        "statements": 70
-      }
-    },
-    "collectCoverageFrom": [
-      "src/**/*.js",
-      "!src/**/*.test.js",
-      "!src/config/**",
-      "!src/migrations/**"
-    ]
-  }
-}
-```
 
 **CI/CD 통합**:
 
@@ -962,7 +917,6 @@ export function enforceHTTPS(req, res, next) {
 - Parameterized Queries 사용
 - ORM/Query Builder 활용 (pg 라이브러리)
 
-
 #### 5.2.6 XSS 방지
 
 **원칙**:
@@ -989,7 +943,6 @@ export function enforceHTTPS(req, res, next) {
 #### 5.3.2 에러 로깅
 
 **구현**:
-
 
 #### 5.3.3 모니터링
 
@@ -1210,7 +1163,6 @@ backend/
 
 ### 6.4 JWT 인증 미들웨어 배치
 
-
 ### 6.5 RESTful API 라우팅 구조
 
 #### 6.5.1 API 엔드포인트 설계
@@ -1366,7 +1318,6 @@ frontend/
 
 #### 7.2.3 router/index.jsx
 
-
 #### 7.2.4 PrivateRoute.jsx (인증 보호 라우트)
 
 ### 7.3 Zustand 상태 관리
@@ -1374,7 +1325,6 @@ frontend/
 #### 7.3.1 stores/useAuthStore.js
 
 #### 7.3.2 stores/useTodoStore.js
-
 
 ### 7.4 Tailwind CSS 설정
 
