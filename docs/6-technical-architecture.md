@@ -2,6 +2,13 @@
 
 본 문서는 JKN-TODOLIST 프로젝트의 상세 기술 아키텍처를 정의합니다.
 
+## 문서 정보
+
+**문서 버전**: 1.1
+**작성일**: 2025-11-27
+**상태**: 최종 (Final)
+**관련 문서**: [실행 계획](./7-implementation_plan.md), [PRD](./2-prd-product-requirements.md)
+
 ## 1. 시스템 아키텍처 개요 (System Overview)
 
 전체 시스템은 클라이언트-서버 구조를 따르며, RESTful API를 통해 통신합니다.
@@ -60,7 +67,13 @@ src/
 `react-router-dom`을 사용하며, 인증 여부에 따른 보호된 라우트(Protected Route)를 구현합니다.
 
 - `/login`, `/signup`: 공개 라우트 (비로그인 시 접근 가능)
-- `/`, `/trash`, `/settings`: 보호된 라우트 (로그인 필요)
+- `/`, `/trash`, `/settings`, `/calendar`: 보호된 라우트 (로그인 필요)
+
+### 2.4 외부 라이브러리
+
+- **react-big-calendar**: 달력 뷰 구현 (월간, 주간, 일간 보기)
+- **SweetAlert2**: 사용자 정의 알림 시스템
+- **date-fns**: 날짜/시간 처리 및 형식화
 
 ## 3. 백엔드 아키텍처 (Backend Architecture)
 
@@ -95,7 +108,13 @@ src/
 └── app.js          # 앱 진입점
 ```
 
-### 3.3 에러 핸들링 (Error Handling)
+### 3.3 추가 기능 모듈
+
+- **Calendar Module**: 달력 기능 관련 컨트롤러, 서비스, 리포지토리
+- **KASI API Module**: 한국천문연구원 API 연동 및 동기화 서비스
+- **Notification Module**: 알림 시스템 관련 유틸리티 함수
+
+### 3.4 에러 핸들링 (Error Handling)
 
 - 전역 에러 핸들링 미들웨어를 통해 모든 예외를 중앙에서 처리합니다.
 - 표준화된 에러 응답 포맷을 사용합니다.
@@ -153,6 +172,15 @@ sequenceDiagram
     Store-->>Component: State Update
     Component-->>User: UI Update
 ```
+
+### 4.4 추가 API 엔드포인트
+
+- **달력 기능**:
+  - `GET /api/calendar/:year/:month`: 해당 월의 할일 및 공휴일 통합 조회
+- **KASI 공휴일 API**:
+  - `GET /api/public-events/sync/:year`: 특정 연도 공휴일 정보 동기화
+- **알림 시스템**:
+  - 프론트엔드 내부에서 SweetAlert2를 통해 처리
 
 ## 5. 배포 파이프라인 (Deployment)
 
