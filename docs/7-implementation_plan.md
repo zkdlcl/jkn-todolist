@@ -63,7 +63,9 @@
 - [x] **BE-05**: 휴지통 조회 및 복구 API 구현 <!-- id: be-05 -->
   - **기능**: `GET /todos/trash/all`, `PATCH /todos/:id/restore`, `DELETE /todos/:id/permanent`
   - **완료**: Repository, Service, Controller 메서드 추가, 라우트 설정, 통합 테스트 통과
-- [ ] **FE-07**: 휴지통 페이지 UI 구현 <!-- id: fe-07 -->
+- [x] **FE-07**: 휴지통 페이지 UI 구현 <!-- id: fe-07 -->
+  - **기능**: 삭제된 할일 조회, 복구, 영구 삭제
+  - **완료**: TrashPage 컴포넌트, API 연동, 라우트 설정, 확인 다이얼로그 구현
 - [x] **FE-08**: 공통 일정(국경일) 더미 데이터 표시 (MVP 범위) <!-- id: fe-08 -->
   - **기능**: 2025년 한국 공휴일 데이터를 `public_events` 테이블에 삽입
   - **완료 조건**: 20개의 공휴일 데이터 정상 삽입 확인

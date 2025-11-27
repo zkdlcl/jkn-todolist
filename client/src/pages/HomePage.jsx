@@ -121,7 +121,7 @@ function HomePage() {
             </button>
             <button
               className="w-full flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-md"
-              onClick={() => alert("휴지통 기능은 Phase 4에서 구현됩니다.")}
+              onClick={() => navigate("/trash")}
             >
               <svg
                 className="w-5 h-5"

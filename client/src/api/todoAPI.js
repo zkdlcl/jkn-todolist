@@ -54,6 +54,35 @@ const todoAPI = {
     const response = await apiClient.delete(`/todos/${id}`);
     return response.data;
   },
+
+  /**
+   * 휴지통 목록 조회
+   * @returns {Promise}
+   */
+  getTrash: async () => {
+    const response = await apiClient.get("/todos/trash/all");
+    return response.data;
+  },
+
+  /**
+   * 할일 복구
+   * @param {number} id
+   * @returns {Promise}
+   */
+  restoreTodo: async (id) => {
+    const response = await apiClient.patch(`/todos/${id}/restore`);
+    return response.data;
+  },
+
+  /**
+   * 할일 영구 삭제
+   * @param {number} id
+   * @returns {Promise}
+   */
+  permanentDeleteTodo: async (id) => {
+    const response = await apiClient.delete(`/todos/${id}/permanent`);
+    return response.data;
+  },
 };
 
 export default todoAPI;

@@ -15,6 +15,8 @@ const useTodoStore = create((set, get) => ({
     field: "created_at",
     order: "DESC",
   },
+  trash: [],
+  trashLoading: false,
 
   // Actions
   /**
@@ -61,7 +63,6 @@ const useTodoStore = create((set, get) => ({
       const newTodo = response.data;
 
       // 목록 갱신 (현재 정렬/필터 유지하면서 추가)
-      // 간단하게는 목록을 다시 불러오는 것이 정렬 유지에 좋음
       await get().fetchTodos();
 
       return { success: true };
@@ -78,13 +79,9 @@ const useTodoStore = create((set, get) => ({
    * 할일 수정
    */
   updateTodo: async (id, updates) => {
-    // 낙관적 업데이트 (Optimistic Update) 적용 가능하지만,
-    // MVP에서는 안전하게 서버 응답 후 갱신
     set({ isLoading: true, error: null });
     try {
       await todoAPI.updateTodo(id, updates);
-
-      // 목록 갱신
       await get().fetchTodos();
 
       return { success: true };
@@ -137,7 +134,7 @@ const useTodoStore = create((set, get) => ({
     set((state) => ({
       filters: { ...state.filters, ...newFilters },
     }));
-    get().fetchTodos(); // 필터 변경 시 목록 다시 조회
+    get().fetchTodos();
   },
 
   /**
@@ -145,7 +142,7 @@ const useTodoStore = create((set, get) => ({
    */
   setSort: (field, order) => {
     set({ sort: { field, order } });
-    get().fetchTodos(); // 정렬 변경 시 목록 다시 조회
+    get().fetchTodos();
   },
 
   /**
@@ -153,6 +150,74 @@ const useTodoStore = create((set, get) => ({
    */
   clearError: () => {
     set({ error: null });
+  },
+
+  /**
+   * 휴지통 목록 조회
+   */
+  fetchTrash: async () => {
+    set({ trashLoading: true, error: null });
+    try {
+      const response = await todoAPI.getTrash();
+      set({ trash: response.data, trashLoading: false });
+    } catch (error) {
+      console.error("Failed to fetch trash:", error);
+      set({
+        trashLoading: false,
+        error:
+          error.response?.data?.message || "휴지통을 불러오는데 실패했습니다.",
+      });
+    }
+  },
+
+  /**
+   * 할일 복구
+   */
+  restoreTodo: async (id) => {
+    set({ trashLoading: true, error: null });
+    try {
+      await todoAPI.restoreTodo(id);
+
+      // 휴지통에서 제거
+      set((state) => ({
+        trash: state.trash.filter((todo) => todo.id !== id),
+        trashLoading: false,
+      }));
+
+      return { success: true };
+    } catch (error) {
+      console.error("Failed to restore todo:", error);
+      set({
+        trashLoading: false,
+        error: error.response?.data?.message || "복구에 실패했습니다.",
+      });
+      return { success: false };
+    }
+  },
+
+  /**
+   * 할일 영구 삭제
+   */
+  permanentDeleteTodo: async (id) => {
+    set({ trashLoading: true, error: null });
+    try {
+      await todoAPI.permanentDeleteTodo(id);
+
+      // 휴지통에서 제거
+      set((state) => ({
+        trash: state.trash.filter((todo) => todo.id !== id),
+        trashLoading: false,
+      }));
+
+      return { success: true };
+    } catch (error) {
+      console.error("Failed to permanently delete todo:", error);
+      set({
+        trashLoading: false,
+        error: error.response?.data?.message || "영구 삭제에 실패했습니다.",
+      });
+      return { success: false };
+    }
   },
 }));
 
