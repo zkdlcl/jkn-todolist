@@ -3,6 +3,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("../swagger/swagger.json");
+const { initializeSchedulers } = require("./src/cron");
 
 dotenv.config();
 
@@ -17,10 +18,12 @@ app.use(express.json());
 const authRoutes = require("./src/routes/authRoutes");
 const todoRoutes = require("./src/routes/todoRoutes");
 const calendarRoutes = require("./src/routes/calendarRoutes");
+const syncRoutes = require("./src/routes/syncRoutes");
 
 app.use("/api/auth", authRoutes);
 app.use("/api/todos", todoRoutes);
 app.use("/api/calendar", calendarRoutes);
+app.use("/api/sync", syncRoutes);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Health check endpoint
@@ -32,6 +35,9 @@ app.get("/api/health", (req, res) => {
 if (process.env.NODE_ENV !== "test") {
   app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
+
+    // Initialize cron schedulers
+    initializeSchedulers();
   });
 }
 

@@ -94,12 +94,28 @@
   - **기능**: 월간 뷰 외에 주간(Week), 일간(Day) 뷰 스타일링 및 기능 점검
   - **완료**: allDay 플래그 자동 설정 로직 구현, Week/Day 뷰에서 시간대별 일정 표시 지원
   - **참조**: `docs/extentions/calendar-feature-consolidated.md#calendarfeature-uiux`
-- [ ] **BE-07**: KASI API 연동 및 동기화 구현 <!-- id: be-07 -->
+- [x] **BE-07**: KASI API 연동 및 동기화 구현 <!-- id: be-07 -->
   - **기능**: 한국천문연구원 특일 정보 API 연동, 자동/수동 동기화
-  - **완료**: KasiAPIService, PublicEventSyncService, 동기화 스크립트, 테스트
+  - **완료**: KasiAPIService, PublicEventSyncService, 동기화 스크립트, 환경변수 설정
   - **참조**: `docs/extentions/calendar-feature-consolidated.md#calendarfeature-kasi-api-integration`
+  - **사용법**: `node scripts/syncHolidays.js 2025`
 
-3.  **중간 점검**: 각 Phase가 끝날 때마다 통합 테스트를 수행합니다.
+### 🟢 Phase 6: 달력 기능 개선 (Calendar Feature Enhancement)
+
+> **목표**: 달력에서 이벤트 타입에 따라 색상 구분이 가능하도록 기능 개선
+> **의존성**: Phase 5 완료
+
+- [x] **BE-08**: 공공 일정 타입 정보 반영 <!-- id: be-08 -->
+  - **기능**: `publicEventRepository`가 이벤트 타입 정보를 프론트엔드에 전달하도록 수정
+  - **완료**: 데이터베이스 쿼리에서 `type` 필드를 `event_type`으로 매핑하여 반환
+- [x] **FE-14**: 이벤트 타입별 색상 구분 <!-- id: fe-14 -->
+  - **기능**: 달력에서 공휴일/기념일/24절기/잡절별로 다른 색상으로 표시
+  - **완료**: `eventStyleGetter` 함수에서 이벤트 타입에 따라 색상 구분 로직 구현
+- [x] **DB-02**: 데이터베이스 스키마 업데이트 <!-- id: db-02 -->
+  - **기능**: `public_events` 테이블에 `SOLAR_TERM`, `SEASONAL_DAY` 타입 추가 및 UNIQUE 제약 조건 반영
+  - **완료**: 스키마 파일 및 마이그레이션 스크립트 업데이트
+
+## 3.  **중간 점검**: 각 Phase가 끝날 때마다 통합 테스트를 수행합니다.
 
 ## 4. 부록: 데이터베이스 세팅 정보
 

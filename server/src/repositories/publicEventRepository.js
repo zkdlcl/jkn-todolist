@@ -9,7 +9,7 @@ class PublicEventRepository {
    */
   async findByDateRange(startDate, endDate) {
     const query = `
-      SELECT id, title AS event_name, date AS event_date,
+      SELECT id, title AS event_name, date AS event_date, type AS event_type,
              CASE WHEN type = 'HOLIDAY' THEN true ELSE false END AS is_holiday,
              created_at
       FROM public_events

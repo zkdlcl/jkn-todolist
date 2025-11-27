@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import useAuthStore from "../stores/useAuthStore";
 import TodoList from "../components/TodoList";
 import TodoModal from "../components/TodoModal";
+import syncAPI from "../api/syncAPI";
 
 function HomePage() {
   const navigate = useNavigate();
@@ -11,6 +12,7 @@ function HomePage() {
   // 모달 상태 관리
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTodo, setEditingTodo] = useState(null);
+  const [isSyncing, setIsSyncing] = useState(false);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -39,6 +41,31 @@ function HomePage() {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setEditingTodo(null);
+  };
+
+  // 공휴일 동기화
+  const handleSync = async () => {
+    if (isSyncing) return;
+
+    const currentYear = new Date().getFullYear();
+    const confirmed = window.confirm(
+      `${currentYear}년 공휴일 데이터를 동기화하시겠습니까?\n(공휴일, 기념일, 24절기, 잡절 포함)`
+    );
+
+    if (!confirmed) return;
+
+    setIsSyncing(true);
+    try {
+      const response = await syncAPI.syncHolidays(currentYear);
+      if (response.data.success) {
+        alert(`동기화 완료!\n총 ${response.data.data.totalAdded}개 항목 추가`);
+      }
+    } catch (error) {
+      console.error("Sync error:", error);
+      alert("동기화 실패: " + (error.response?.data?.message || error.message));
+    } finally {
+      setIsSyncing(false);
+    }
   };
 
   if (!isAuthenticated) {
@@ -160,6 +187,35 @@ function HomePage() {
               </svg>
               달력
             </button>
+
+            {/* 공휴일 동기화 버튼 (MVP 테스트용) */}
+            <div className="pt-2 mt-2 border-t border-gray-200">
+              <button
+                className={`w-full flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md ${
+                  isSyncing
+                    ? "text-gray-400 bg-gray-100 cursor-not-allowed"
+                    : "text-green-700 hover:bg-green-50 hover:text-green-900"
+                }`}
+                onClick={handleSync}
+                disabled={isSyncing}
+              >
+                <svg
+                  className={`w-5 h-5 ${isSyncing ? "animate-spin" : ""}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                  />
+                </svg>
+                {isSyncing ? "동기화 중..." : "공휴일 동기화"}
+              </button>
+              <p className="text-xs text-gray-500 mt-1 px-3">MVP 테스트용</p>
+            </div>
           </div>
 
           {/* 할일 목록 영역 */}

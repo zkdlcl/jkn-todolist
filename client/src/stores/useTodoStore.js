@@ -239,6 +239,7 @@ const useTodoStore = create((set, get) => ({
         end: new Date(event.event_date),
         allDay: true,
         isPublicEvent: true,
+        eventType: event.event_type || "HOLIDAY", // HOLIDAY, NOTICE, SOLAR_TERM, SEASONAL_DAY
       }));
 
       // Convert todos to calendar events

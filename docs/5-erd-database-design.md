@@ -51,7 +51,7 @@ erDiagram
         int id PK
         string title "일정 제목"
         date date "날짜"
-        string type "유형 (HOLIDAY, NOTICE)"
+        string type "유형 (HOLIDAY, NOTICE, SOLAR_TERM, SEASONAL_DAY)"
         timestamp created_at
         timestamp updated_at
     }
@@ -110,9 +110,10 @@ JWT 인증을 위한 리프레시 토큰을 관리합니다. 로그아웃 시 �
 | `id` | SERIAL | PK | 고유 식별자 |
 | `title` | VARCHAR(200) | NOT NULL | 일정 제목 |
 | `date` | DATE | NOT NULL | 일정 날짜 |
-| `type` | VARCHAR(20) | DEFAULT 'HOLIDAY' | 일정 유형 |
+| `type` | VARCHAR(20) | DEFAULT 'HOLIDAY', CHECK ('HOLIDAY', 'NOTICE', 'SOLAR_TERM', 'SEASONAL_DAY') | 일정 유형 |
 | `created_at` | TIMESTAMP | DEFAULT NOW() | 생성 일시 |
 | `updated_at` | TIMESTAMP | DEFAULT NOW() | 수정 일시 |
+| `UNIQUE` | (date, title) | 제약 조건 | 날짜와 제목의 조합이 고유하도록 함 |
 
 ## 4. 인덱스 전략 (Indexing Strategy)
 성능 최적화를 위해 다음 컬럼에 인덱스를 생성합니다.

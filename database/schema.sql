@@ -44,9 +44,10 @@ CREATE TABLE public_events (
     id SERIAL PRIMARY KEY,
     title VARCHAR(200) NOT NULL,
     date DATE NOT NULL,
-    type VARCHAR(20) DEFAULT 'HOLIDAY' CHECK (type IN ('HOLIDAY', 'NOTICE')),
+    type VARCHAR(20) DEFAULT 'HOLIDAY' CHECK (type IN ('HOLIDAY', 'NOTICE', 'SOLAR_TERM', 'SEASONAL_DAY')),
     created_at TIMESTAMP DEFAULT NOW(),
-    updated_at TIMESTAMP DEFAULT NOW()
+    updated_at TIMESTAMP DEFAULT NOW(),
+    UNIQUE(date, title)  -- 중복 방지
 );
 
 -- 5. Indexes

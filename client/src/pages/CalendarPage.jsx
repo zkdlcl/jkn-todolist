@@ -42,6 +42,7 @@ const CalendarPage = () => {
   const navigate = useNavigate();
   const { calendarEvents, fetchCalendarData, error } = useTodoStore();
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentView, setCurrentView] = useState("month");
 
   // Fetch calendar data for the current month
   useEffect(() => {
@@ -53,9 +54,24 @@ const CalendarPage = () => {
   // Custom event style based on event type and completion status
   const eventStyleGetter = (event) => {
     let backgroundColor;
+
     if (event.isPublicEvent) {
-      // Public events (holidays) - red color
-      backgroundColor = "#dc2626";
+      // 공휴일 및 공공 이벤트 - 타입별로 색상 구분
+      switch (event.eventType) {
+        case "SOLAR_TERM": // 24절기 - 보라색
+          backgroundColor = "#9333ea";
+          break;
+        case "SEASONAL_DAY": // 잡절 - 주황색
+          backgroundColor = "#ea580c";
+          break;
+        case "NOTICE": // 기념일 - 분홍색
+          backgroundColor = "#ec4899";
+          break;
+        case "HOLIDAY": // 공휴일 - 빨간색
+        default:
+          backgroundColor = "#dc2626";
+          break;
+      }
     } else if (event.is_completed) {
       // Completed todos - gray color
       backgroundColor = "#94a3b8";
@@ -172,6 +188,10 @@ const CalendarPage = () => {
     setCurrentDate(newDate);
   };
 
+  const handleViewChange = (view) => {
+    setCurrentView(view);
+  };
+
   if (!localizer) {
     return (
       <div className="p-6 max-w-6xl mx-auto">
@@ -222,7 +242,8 @@ const CalendarPage = () => {
           }}
           toolbar={true}
           views={["month", "week", "day"]}
-          defaultView="month"
+          view={currentView}
+          onView={handleViewChange}
           date={currentDate}
           onNavigate={handleNavigate}
           messages={{
