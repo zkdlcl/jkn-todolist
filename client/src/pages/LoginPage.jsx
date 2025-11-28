@@ -35,7 +35,7 @@ function LoginPage() {
     <div className="min-h-screen relative flex items-center justify-center px-4 py-12 overflow-hidden">
       {/* Random Background Image */}
       <div
-        className="absolute inset-0"
+        className="absolute inset-0 -z-10"
         style={{
           backgroundImage: `url(${backgroundImage})`,
           backgroundSize: "cover",
@@ -45,7 +45,7 @@ function LoginPage() {
       />
 
       {/* Dark Overlay */}
-      <div className="absolute inset-0 bg-black bg-opacity-40 z-0" />
+      <div className="absolute inset-0 bg-black bg-opacity-40" />
 
       <div className="max-w-md w-full space-y-8 relative z-10">
         {/* 헤더 */}
