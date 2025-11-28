@@ -8,6 +8,22 @@ function LoginPage() {
   const { login, isLoading, error: authError } = useAuthStore();
   const [serverError, setServerError] = useState("");
 
+  // 배경 이미지 배열 - 새로고침마다 랜덤하게 선택
+  const backgroundImages = [
+    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&h=1080&fit=crop", // Mountain landscape
+    "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1920&h=1080&fit=crop", // Lake and mountains
+    "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1920&h=1080&fit=crop", // Foggy mountains
+    "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?w=1920&h=1080&fit=crop", // Forest
+    "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=1920&h=1080&fit=crop", // Nature path
+    "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1920&h=1080&fit=crop", // Forest river
+  ];
+
+  // 새로고침마다 다른 이미지 선택
+  const [backgroundImage] = useState(() => {
+    const randomIndex = Math.floor(Math.random() * backgroundImages.length);
+    return backgroundImages[randomIndex];
+  });
+
   const {
     register,
     handleSubmit,
@@ -33,7 +49,7 @@ function LoginPage() {
         alignItems: "center",
         justifyContent: "center",
         padding: "3rem 1rem",
-        backgroundImage: `url(https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&h=1080&fit=crop)`,
+        backgroundImage: `url(${backgroundImage})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
