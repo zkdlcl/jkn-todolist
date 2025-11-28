@@ -80,46 +80,50 @@ jkn-todolist/
 - [10. KASI 특일 정보 API 연동 가이드](docs/API/10-kasi-api-integration.md)
 - [KASI API 검토 요약](docs/extentions/kasi-api-review-summary.md)
 
+### 배포 문서
+
+- [배포 체크리스트](DEPLOYMENT_CHECKLIST.md) ⭐
+- [배포 가이드 (상세)](docs/deployment-guide.md)
+
 ### 디버깅 기록
 
 - [인증 상태 유지 문제 디버깅](docs/debug-records/auth-persistence-issue-debug.md)
 
 ## 🚀 시작하기
 
-### 1. 환경 변수 설정
+### 로컬 개발 환경
 
-**server/.env**
+#### 1. 환경 변수 설정
 
+**루트 `.env`** (MCP 연결용)
 ```env
-# Database
-DATABASE_URL=postgresql://user:password@host:5432/jkn_todolist
-
-# JWT
-JWT_SECRET=your-secret-key
-JWT_REFRESH_SECRET=your-refresh-secret
-
-# KASI API (확장 기능)
+POSTGRES_CONNECTION_STRING=postgresql://postgres.[PROJECT-REF]:[PASSWORD]@aws-1-ap-northeast-2.pooler.supabase.com:6543/postgres
 KASI_API_KEY=your-api-key
 KASI_API_BASE_URL=http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService
 ```
 
-**client/.env.local**
+**`server/.env`**
+```env
+PORT=3000
+DATABASE_URL=postgresql://postgres.[PROJECT-REF]:[PASSWORD]@aws-1-ap-northeast-2.pooler.supabase.com:6543/postgres
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+JWT_REFRESH_SECRET=your-super-secret-refresh-key-change-this-in-production
+KASI_API_KEY=your-api-key
+KASI_API_BASE_URL=http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService
+```
 
+**`client/.env.local`**
 ```env
 VITE_API_BASE_URL=http://localhost:3000/api
 ```
 
-### 2. 데이터베이스 설정
+#### 2. 데이터베이스 설정 (Supabase)
 
-```bash
-# PostgreSQL 데이터베이스 생성
-createdb jkn_todolist
+1. [Supabase](https://supabase.com)에서 프로젝트 생성 (Region: Seoul)
+2. Supabase SQL Editor에서 `database/deploy-schema.sql` 실행
+3. Connection String 복사 (Transaction Pooling Mode)
 
-# 스키마 적용
-psql -d jkn_todolist -f database/schema.sql
-```
-
-### 3. 서버 실행
+#### 3. 서버 실행
 
 ```bash
 cd server
@@ -127,13 +131,32 @@ npm install
 npm run dev
 ```
 
-### 4. 클라이언트 실행
+#### 4. 클라이언트 실행
 
 ```bash
 cd client
 npm install
 npm run dev
 ```
+
+#### 5. 공휴일 데이터 동기화
+
+```bash
+# 2025년 공휴일 동기화
+node scripts/syncHolidays.js 2025
+```
+
+### 배포 (Vercel)
+
+**빠른 배포**: [`DEPLOYMENT_CHECKLIST.md`](DEPLOYMENT_CHECKLIST.md) 참고
+**상세 가이드**: [`docs/deployment-guide.md`](docs/deployment-guide.md) 참고
+
+**핵심 단계**:
+1. Supabase에 `database/deploy-schema.sql` 실행
+2. Vercel에 백엔드 배포 (Root: `server`)
+3. Vercel에 프론트엔드 배포 (Root: `client`)
+4. 환경 변수 설정
+5. 공휴일 데이터 동기화
 
 ## ✅ MVP 완료 현황
 
