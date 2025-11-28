@@ -138,7 +138,18 @@ const useAuthStore = create(
         if (accessToken && refreshToken) {
           try {
             // JWT 토큰의 유효성만 확인 (디코딩으로 만료 시간 확인)
-            const tokenPayload = JSON.parse(atob(accessToken.split(".")[1]));
+            // base64 디코딩 시 한글 깨짐 방지를 위해 decodeURIComponent(escape(atob(...))) 사용
+            const base64Url = accessToken.split(".")[1];
+            const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+            const jsonPayload = decodeURIComponent(
+              atob(base64)
+                .split("")
+                .map(function (c) {
+                  return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+                })
+                .join("")
+            );
+            const tokenPayload = JSON.parse(jsonPayload);
             const isTokenExpired = tokenPayload.exp * 1000 < Date.now();
 
             if (isTokenExpired) {
