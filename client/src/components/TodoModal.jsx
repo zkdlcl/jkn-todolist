@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import useTodoStore from "../stores/useTodoStore";
 import { showError, showSuccess } from "../utils/notification";
 
-function TodoModal({ isOpen, onClose, todoToEdit }) {
+function TodoModal({ isOpen, onClose, todoToEdit, defaultDate }) {
   const { addTodo, updateTodo, isLoading } = useTodoStore();
 
   const {
@@ -27,6 +27,13 @@ function TodoModal({ isOpen, onClose, todoToEdit }) {
   const startDate = watch("start_date");
   const dueDate = watch("due_date");
 
+  // Helper to get local ISO string for datetime-local input
+  const toLocalISOString = (date) => {
+    const d = new Date(date);
+    const offset = d.getTimezoneOffset() * 60000;
+    return new Date(d.getTime() - offset).toISOString().slice(0, 16);
+  };
+
   // 모달이 열릴 때 초기값 설정
   useEffect(() => {
     if (isOpen) {
@@ -38,29 +45,25 @@ function TodoModal({ isOpen, onClose, todoToEdit }) {
 
         // 날짜 포맷팅 (datetime-local input에 맞게)
         if (todoToEdit.start_date) {
-          setValue(
-            "start_date",
-            new Date(todoToEdit.start_date).toISOString().slice(0, 16)
-          );
+          setValue("start_date", toLocalISOString(todoToEdit.start_date));
         }
         if (todoToEdit.due_date) {
-          setValue(
-            "due_date",
-            new Date(todoToEdit.due_date).toISOString().slice(0, 16)
-          );
+          setValue("due_date", toLocalISOString(todoToEdit.due_date));
         }
       } else {
         // 추가 모드 - 폼 초기화
         reset({
           title: "",
           content: "",
-          start_date: new Date().toISOString().slice(0, 16), // 기본값: 현재 시간
+          start_date: defaultDate
+            ? toLocalISOString(defaultDate)
+            : toLocalISOString(new Date()),
           due_date: "",
           priority: "MEDIUM",
         });
       }
     }
-  }, [isOpen, todoToEdit, setValue, reset]);
+  }, [isOpen, todoToEdit, defaultDate, setValue, reset]);
 
   const onSubmit = async (data) => {
     // 빈 문자열 날짜 처리
@@ -78,7 +81,9 @@ function TodoModal({ isOpen, onClose, todoToEdit }) {
     }
 
     if (result.success) {
-      showSuccess(todoToEdit ? "할일이 수정되었습니다." : "할일이 추가되었습니다.");
+      showSuccess(
+        todoToEdit ? "할일이 수정되었습니다." : "할일이 추가되었습니다."
+      );
       onClose();
     } else {
       showError(result.error || "작업에 실패했습니다.");

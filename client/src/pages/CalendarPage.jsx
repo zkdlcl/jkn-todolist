@@ -7,6 +7,7 @@ import { ko } from "date-fns/locale";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./CalendarPage.css";
 import useTodoStore from "../stores/useTodoStore";
+import TodoModal from "../components/TodoModal";
 
 const locales = {
   ko: ko,
@@ -44,6 +45,22 @@ const CalendarPage = () => {
     useTodoStore();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [currentView, setCurrentView] = useState("month");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
+
+  const handleSelectSlot = ({ start }) => {
+    setSelectedDate(start);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedDate(null);
+    // Refresh calendar data to show new todo
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth() + 1;
+    fetchCalendarData(year, month);
+  };
 
   // Fetch calendar data for the current month
   useEffect(() => {
@@ -257,6 +274,8 @@ const CalendarPage = () => {
           onView={handleViewChange}
           date={currentDate}
           onNavigate={handleNavigate}
+          selectable={true}
+          onSelectSlot={handleSelectSlot}
           messages={{
             date: "날짜",
             time: "시간",
@@ -275,6 +294,13 @@ const CalendarPage = () => {
           popup={true}
         />
       </div>
+
+      {/* 할일 추가 모달 */}
+      <TodoModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        defaultDate={selectedDate}
+      />
     </div>
   );
 };
