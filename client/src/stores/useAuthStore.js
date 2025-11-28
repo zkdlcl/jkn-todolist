@@ -171,6 +171,7 @@ const useAuthStore = create(
               const user = {
                 id: tokenPayload.userId,
                 email: tokenPayload.email,
+                name: tokenPayload.name,
                 role: tokenPayload.role,
               };
 

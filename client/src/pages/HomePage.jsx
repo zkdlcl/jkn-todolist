@@ -4,7 +4,12 @@ import useAuthStore from "../stores/useAuthStore";
 import TodoList from "../components/TodoList";
 import TodoModal from "../components/TodoModal";
 import syncAPI from "../api/syncAPI";
-import { showInfo, showSuccess, showError, showConfirm } from "../utils/notification";
+import {
+  showInfo,
+  showSuccess,
+  showError,
+  showConfirm,
+} from "../utils/notification";
 
 function HomePage() {
   const navigate = useNavigate();
@@ -74,7 +79,7 @@ function HomePage() {
                 className="text-lg text-blue-600 hidden sm:inline"
                 style={{ fontFamily: "JEJUHALLASAN, sans-serif" }}
               >
-                {user?.email?.split("@")[0]}님
+                {user?.name || user?.email?.split("@")[0]}님
               </span>
               <button
                 onClick={handleLogout}
