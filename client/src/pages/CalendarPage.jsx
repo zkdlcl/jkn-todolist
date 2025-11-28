@@ -116,8 +116,26 @@ const CalendarPage = () => {
       // Completed todos - gray color
       backgroundColor = "#94a3b8";
     } else {
-      // Pending todos - blue color
-      backgroundColor = "#3b82f6";
+      // Pending todos
+      const now = new Date();
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const eventEnd = new Date(event.end);
+      const eventEndDay = new Date(
+        eventEnd.getFullYear(),
+        eventEnd.getMonth(),
+        eventEnd.getDate()
+      );
+
+      if (eventEnd < now && eventEndDay < today) {
+        // Overdue (past due date) - dark red/brown
+        backgroundColor = "#7f1d1d";
+      } else if (eventEndDay.getTime() === today.getTime()) {
+        // Due today - orange/yellow
+        backgroundColor = "#d97706";
+      } else {
+        // Future - blue color
+        backgroundColor = "#3b82f6";
+      }
     }
 
     const style = {
