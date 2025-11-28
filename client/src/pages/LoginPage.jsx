@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../stores/useAuthStore";
@@ -7,6 +7,26 @@ function LoginPage() {
   const navigate = useNavigate();
   const { login, isLoading, error: authError } = useAuthStore();
   const [serverError, setServerError] = useState("");
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const backgroundImages = [
+    "https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80", // Landscape
+    "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80", // Nature
+    "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?ixlib=rb-4.0.3&auto=format&fit=crop&w=2074&q=80", // Foggy mountains
+    "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80", // Forest
+    "https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2074&q=80", // Alone in nature
+  ];
+
+  // Background slideshow effect
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex(
+        (prevIndex) => (prevIndex + 1) % backgroundImages.length
+      );
+    }, 5000); // Change every 5 seconds
+
+    return () => clearInterval(interval);
+  }, []);
 
   const {
     register,
@@ -26,17 +46,38 @@ function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
-      <div className="max-w-md w-full space-y-8">
+    <div className="min-h-screen relative flex items-center justify-center px-4 py-12 overflow-hidden">
+      {/* Background Slideshow */}
+      {backgroundImages.map((img, index) => (
+        <div
+          key={index}
+          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+            index === currentImageIndex ? "opacity-100" : "opacity-0"
+          }`}
+          style={{
+            backgroundImage: `url(${img})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            zIndex: -1,
+          }}
+        />
+      ))}
+
+      {/* Dark Overlay */}
+      <div className="absolute inset-0 bg-black bg-opacity-40 z-0" />
+
+      <div className="max-w-md w-full space-y-8 relative z-10">
         {/* 헤더 */}
         <div className="text-center">
           <h1
-            className="text-4xl font-bold text-gray-900 mb-2"
+            className="text-4xl font-bold text-white mb-2 drop-shadow-lg"
             style={{ fontFamily: "JEJUHALLASAN, sans-serif" }}
           >
             JKN-TODOLIST
           </h1>
-          <p className="text-sm text-gray-600">할일과 일정을 통합 관리하세요</p>
+          <p className="text-sm text-gray-200 drop-shadow-md">
+            할일과 일정을 통합 관리하세요
+          </p>
         </div>
 
         {/* 로그인 폼 */}
