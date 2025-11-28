@@ -37,7 +37,7 @@ if (process.env.NODE_ENV !== "test") {
   app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 
-    // Initialize cron schedulers
+    // Initialize cron schedulers 스케쥴러는 버셀환경에서 의미없음
     initializeSchedulers();
   });
 }
