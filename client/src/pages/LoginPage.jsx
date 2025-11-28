@@ -11,8 +11,8 @@ function LoginPage() {
   // Generate random seed for consistent image during session
   const [randomSeed] = useState(() => Math.floor(Math.random() * 1000));
 
-  // Unsplash Source API - random beautiful image on each refresh
-  const backgroundImage = `https://source.unsplash.com/1920x1080/?nature,landscape,${randomSeed}`;
+  // Lorem Picsum - free random beautiful images with blur effect
+  const backgroundImage = `https://picsum.photos/seed/${randomSeed}/1920/1080?blur=2`;
 
   const {
     register,
