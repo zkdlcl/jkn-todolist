@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../stores/useAuthStore";
@@ -7,26 +7,12 @@ function LoginPage() {
   const navigate = useNavigate();
   const { login, isLoading, error: authError } = useAuthStore();
   const [serverError, setServerError] = useState("");
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  const backgroundImages = [
-    "https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80", // Landscape
-    "https://images.unsplash.com/photo-1472214103451-9374bd1c798e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80", // Nature
-    "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?ixlib=rb-4.0.3&auto=format&fit=crop&w=2074&q=80", // Foggy mountains
-    "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80", // Forest
-    "https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2074&q=80", // Alone in nature
-  ];
+  // Generate random seed for consistent image during session
+  const [randomSeed] = useState(() => Math.floor(Math.random() * 1000));
 
-  // Background slideshow effect
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImageIndex(
-        (prevIndex) => (prevIndex + 1) % backgroundImages.length
-      );
-    }, 5000); // Change every 5 seconds
-
-    return () => clearInterval(interval);
-  }, []);
+  // Unsplash Source API - random beautiful image on each refresh
+  const backgroundImage = `https://source.unsplash.com/1920x1080/?nature,landscape,${randomSeed}`;
 
   const {
     register,
@@ -47,21 +33,16 @@ function LoginPage() {
 
   return (
     <div className="min-h-screen relative flex items-center justify-center px-4 py-12 overflow-hidden">
-      {/* Background Slideshow */}
-      {backgroundImages.map((img, index) => (
-        <div
-          key={index}
-          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-            index === currentImageIndex ? "opacity-100" : "opacity-0"
-          }`}
-          style={{
-            backgroundImage: `url(${img})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            zIndex: -1,
-          }}
-        />
-      ))}
+      {/* Random Background Image */}
+      <div
+        className="absolute inset-0"
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      />
 
       {/* Dark Overlay */}
       <div className="absolute inset-0 bg-black bg-opacity-40 z-0" />
