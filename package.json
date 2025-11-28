@@ -1,5 +1,32 @@
 {
   "devDependencies": {
     "@playwright/test": "^1.57.0"
-  }
+  },
+  "name": "jkn-todolist",
+  "version": "1.0.0",
+  "description": "개인 할일과 공통 일정을 통합 관리하는 스마트 할일 관리 애플리케이션",
+  "main": "notification-test.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "dependencies": {
+    "playwright": "^1.57.0",
+    "playwright-core": "^1.57.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zkdlcl/jkn-todolist.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/zkdlcl/jkn-todolist/issues"
+  },
+  "homepage": "https://github.com/zkdlcl/jkn-todolist#readme"
 }
