@@ -40,7 +40,8 @@ const TooltipPortal = ({ children, position }) => {
 
 const CalendarPage = () => {
   const navigate = useNavigate();
-  const { calendarEvents, fetchCalendarData, error } = useTodoStore();
+  const { calendarEvents, fetchCalendarData, error, isLoading } =
+    useTodoStore();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [currentView, setCurrentView] = useState("month");
 
@@ -230,6 +231,16 @@ const CalendarPage = () => {
       )}
 
       <div className="flex-1 min-h-0 border rounded-lg shadow-sm relative z-0">
+        {isLoading && (
+          <div className="absolute inset-0 z-50 flex items-center justify-center bg-white bg-opacity-70 backdrop-blur-sm">
+            <div className="flex flex-col items-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-3"></div>
+              <p className="text-blue-600 font-medium animate-pulse">
+                일정을 불러오는 중입니다...
+              </p>
+            </div>
+          </div>
+        )}
         <Calendar
           localizer={localizer}
           events={calendarEvents}

@@ -19,11 +19,11 @@ class CalendarService {
     const startDate = new Date(year, month - 1, 1); // month is 0-indexed in JS
     const endDate = new Date(year, month, 0); // Last day of the month
 
-    // Query todos for the specified month
-    const todos = await todoRepository.findByDateRange(userId, startDate, endDate);
-
-    // Query public events (holidays) for the specified month
-    const publicEvents = await publicEventRepository.findByDateRange(startDate, endDate);
+    // Query todos and public events in parallel
+    const [todos, publicEvents] = await Promise.all([
+      todoRepository.findByDateRange(userId, startDate, endDate),
+      publicEventRepository.findByDateRange(startDate, endDate),
+    ]);
 
     return {
       year,
