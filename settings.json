@@ -5,7 +5,7 @@
       "args": [
         "-y",
         "@modelcontextprotocol/server-postgres",
-        "postgresql://postgres.jzkkxkibozjbitjczjpm:hMOTJd43a4zuLK3V@aws-1-ap-northeast-2.pooler.supabase.com:6543/postgres"
+        "postgresql://postgres:sjrnfl@localhost:5432/jkn_todolist"
       ],
       "disabled": false
     }

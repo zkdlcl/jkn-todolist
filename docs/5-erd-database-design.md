@@ -110,10 +110,12 @@ JWT 인증을 위한 리프레시 토큰을 관리합니다. 로그아웃 시 �
 | `id` | SERIAL | PK | 고유 식별자 |
 | `title` | VARCHAR(200) | NOT NULL | 일정 제목 |
 | `date` | DATE | NOT NULL | 일정 날짜 |
-| `type` | VARCHAR(20) | DEFAULT 'HOLIDAY', CHECK ('HOLIDAY', 'NOTICE', 'SOLAR_TERM', 'SEASONAL_DAY') | 일정 유형 |
+| `type` | VARCHAR(20) | DEFAULT 'HOLIDAY', CHECK (type IN ('HOLIDAY', 'NOTICE', 'SOLAR_TERM', 'SEASONAL_DAY')) | 일정 유형 |
 | `created_at` | TIMESTAMP | DEFAULT NOW() | 생성 일시 |
 | `updated_at` | TIMESTAMP | DEFAULT NOW() | 수정 일시 |
-| `UNIQUE` | (date, title) | 제약 조건 | 날짜와 제목의 조합이 고유하도록 함 |
+
+**제약조건:**
+- UNIQUE (date, title): 날짜와 제목의 조합이 고유하도록 함
 
 ## 4. 인덱스 전략 (Indexing Strategy)
 성능 최적화를 위해 다음 컬럼에 인덱스를 생성합니다.
@@ -121,3 +123,4 @@ JWT 인증을 위한 리프레시 토큰을 관리합니다. 로그아웃 시 �
 - **users**: `email` (로그인 조회용)
 - **todos**: `user_id` (내 할일 조회용), `deleted_status` (활성/삭제 필터링용)
 - **refresh_tokens**: `token` (토큰 검증용), `user_id` (토큰 관리용)
+- **public_events**: `(date, title)` (UNIQUE 제약조건에 의해 자동 생성, 중복 방지 및 조회 최적화)
