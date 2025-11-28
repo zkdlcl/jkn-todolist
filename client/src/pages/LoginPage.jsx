@@ -8,12 +8,6 @@ function LoginPage() {
   const { login, isLoading, error: authError } = useAuthStore();
   const [serverError, setServerError] = useState("");
 
-  // Generate random seed for consistent image during session
-  const [randomSeed] = useState(() => Math.floor(Math.random() * 1000));
-
-  // Lorem Picsum - free random beautiful images with blur effect
-  const backgroundImage = `https://picsum.photos/seed/${randomSeed}/1920/1080?blur=2`;
-
   const {
     register,
     handleSubmit,
@@ -32,31 +26,51 @@ function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen relative flex items-center justify-center px-4 py-12 overflow-hidden">
-      {/* Random Background Image */}
+    <div
+      style={{
+        minHeight: "100vh",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "3rem 1rem",
+        backgroundImage: `url(https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&h=1080&fit=crop)`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        position: "relative",
+      }}
+    >
+      {/* Dark Overlay */}
       <div
-        className="absolute inset-0 -z-10"
         style={{
-          backgroundImage: `url(${backgroundImage})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: "rgba(0, 0, 0, 0.4)",
         }}
       />
 
-      {/* Dark Overlay */}
-      <div className="absolute inset-0 bg-black bg-opacity-40" />
-
-      <div className="max-w-md w-full space-y-8 relative z-10">
+      <div
+        className="max-w-md w-full space-y-8"
+        style={{ position: "relative", zIndex: 10 }}
+      >
         {/* 헤더 */}
         <div className="text-center">
           <h1
-            className="text-4xl font-bold text-white mb-2 drop-shadow-lg"
-            style={{ fontFamily: "JEJUHALLASAN, sans-serif" }}
+            className="text-4xl font-bold text-white mb-2"
+            style={{
+              fontFamily: "JEJUHALLASAN, sans-serif",
+              textShadow: "0 4px 6px rgba(0,0,0,0.5)",
+            }}
           >
             JKN-TODOLIST
           </h1>
-          <p className="text-sm text-gray-200 drop-shadow-md">
+          <p
+            className="text-sm text-gray-200"
+            style={{ textShadow: "0 2px 4px rgba(0,0,0,0.5)" }}
+          >
             할일과 일정을 통합 관리하세요
           </p>
         </div>

@@ -155,9 +155,7 @@ const useAuthStore = create(
             if (isTokenExpired) {
               console.log("액세스 토큰이 만료됨, 리프레시 토큰으로 갱신 시도");
               // 토큰이 만료된 경우 서버에 갱신 요청
-              const response = await apiClient.post("/auth/refresh", {
-                refreshToken,
-              });
+              const response = await authAPI.refresh({ refreshToken });
               const {
                 user,
                 accessToken: newAccessToken,
