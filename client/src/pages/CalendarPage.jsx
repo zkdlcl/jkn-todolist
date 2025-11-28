@@ -47,15 +47,37 @@ const CalendarPage = () => {
   const [currentView, setCurrentView] = useState("month");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
+  const [todoToEdit, setTodoToEdit] = useState(null);
 
   const handleSelectSlot = ({ start }) => {
     setSelectedDate(start);
+    setTodoToEdit(null);
+    setIsModalOpen(true);
+  };
+
+  const handleSelectEvent = (event) => {
+    // 공휴일은 수정 불가
+    if (event.isPublicEvent) return;
+
+    // 할일 데이터 구성 (모달 포맷에 맞게)
+    const todoData = {
+      id: event.id,
+      title: event.title,
+      content: event.content,
+      priority: event.priority,
+      start_date: event.start,
+      due_date: event.end,
+      is_completed: event.is_completed,
+    };
+
+    setTodoToEdit(todoData);
     setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedDate(null);
+    setTodoToEdit(null);
     // Refresh calendar data to show new todo
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth() + 1;
@@ -276,6 +298,7 @@ const CalendarPage = () => {
           onNavigate={handleNavigate}
           selectable={true}
           onSelectSlot={handleSelectSlot}
+          onSelectEvent={handleSelectEvent}
           messages={{
             date: "날짜",
             time: "시간",
@@ -300,6 +323,7 @@ const CalendarPage = () => {
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         defaultDate={selectedDate}
+        todoToEdit={todoToEdit}
       />
     </div>
   );

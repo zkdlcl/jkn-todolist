@@ -245,7 +245,10 @@ const useTodoStore = create((set, get) => ({
       // Convert todos to calendar events
       const todoEvents = todos.map((todo) => {
         const startDate = new Date(todo.start_date || todo.created_at);
-        const endDate = new Date(todo.due_date || todo.created_at);
+        // 마감일이 없으면 시작일과 동일하게 설정 (하루짜리 이벤트로 표시)
+        const endDate = todo.due_date
+          ? new Date(todo.due_date)
+          : new Date(startDate);
 
         // Check if dates have specific time (not midnight)
         // Note: This is a simple heuristic. Ideally, we should store an 'all_day' flag in DB.
