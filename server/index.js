@@ -23,7 +23,9 @@ const syncRoutes = require("./src/routes/syncRoutes");
 app.use("/api/auth", authRoutes);
 app.use("/api/todos", todoRoutes);
 app.use("/api/calendar", calendarRoutes);
+app.use("/api/calendar", calendarRoutes);
 app.use("/api/sync", syncRoutes);
+app.use("/api/cron", require("./src/routes/cronRoutes"));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Health check endpoint

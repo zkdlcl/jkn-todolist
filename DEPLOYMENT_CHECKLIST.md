@@ -3,12 +3,14 @@
 ## 🚀 빠른 배포 가이드
 
 ### 1단계: Supabase 데이터베이스 설정 ✅
+
 - [ ] Supabase 프로젝트 생성 (Region: Seoul)
 - [ ] `database/deploy-schema.sql` 내용을 SQL Editor에서 실행
 - [ ] Connection String 복사 (Transaction Pooling Mode)
 - [ ] 테이블 생성 확인 (users, todos, refresh_tokens, public_events)
 
 ### 2단계: 백엔드 배포 (Vercel) ✅
+
 - [ ] GitHub에 코드 푸시
 - [ ] Vercel 프로젝트 생성
 - [ ] Root Directory: `server` 설정
@@ -17,8 +19,6 @@
   NODE_ENV=production
   PORT=3000
   DATABASE_URL=[Supabase Connection String]
-  JWT_SECRET=[강력한 랜덤 문자열 32자 이상]
-  JWT_REFRESH_SECRET=[강력한 랜덤 문자열 32자 이상]
   KASI_API_KEY=[KASI API Key]
   KASI_API_BASE_URL=http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService
   ```
@@ -26,6 +26,7 @@
 - [ ] `/api/health` 엔드포인트 테스트
 
 ### 3단계: 프론트엔드 배포 (Vercel) ✅
+
 - [ ] Vercel 새 프로젝트 생성
 - [ ] Root Directory: `client` 설정
 - [ ] Framework: Vite 선택
@@ -38,6 +39,7 @@
 - [ ] 배포 완료 후 웹사이트 접속 테스트
 
 ### 4단계: 공휴일 데이터 동기화 ✅
+
 - [ ] 로컬에서 스크립트 실행:
   ```bash
   DATABASE_URL=[Supabase URL] node scripts/syncHolidays.js 2025
@@ -50,6 +52,7 @@
   ```
 
 ### 5단계: 배포 확인 ✅
+
 - [ ] 회원가입 테스트
 - [ ] 로그인 테스트
 - [ ] 할일 생성/수정/삭제 테스트
@@ -62,10 +65,13 @@
 ## 🔧 MCP 연결 설정
 
 ### 로컬 개발용 MCP 설정
+
 `.mcp.json` 파일 사용 중 (현재 설정됨)
 
 ### 배포용 MCP 설정
+
 `.mcp.deploy.json` 파일 참고:
+
 ```json
 {
   "mcpServers": {
@@ -86,6 +92,7 @@
 ```
 
 루트 `.env` 파일에 환경 변수 설정:
+
 ```env
 POSTGRES_CONNECTION_STRING=postgresql://postgres.[PROJECT-REF]:[PASSWORD]@aws-1-ap-northeast-2.pooler.supabase.com:6543/postgres
 ```
@@ -95,6 +102,7 @@ POSTGRES_CONNECTION_STRING=postgresql://postgres.[PROJECT-REF]:[PASSWORD]@aws-1-
 ## 📝 환경 변수 빠른 참조
 
 ### 루트 `.env` (MCP용)
+
 ```env
 POSTGRES_CONNECTION_STRING=[Supabase Connection String]
 KASI_API_KEY=[KASI API Key]
@@ -102,6 +110,7 @@ KASI_API_BASE_URL=http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoServic
 ```
 
 ### `server/.env` (백엔드)
+
 ```env
 PORT=3000
 DATABASE_URL=[Supabase Connection String]
@@ -112,11 +121,13 @@ KASI_API_BASE_URL=http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoServic
 ```
 
 ### `client/.env.local` (프론트엔드 로컬)
+
 ```env
 VITE_API_BASE_URL=http://localhost:3000/api
 ```
 
 ### `client/.env.production` (프론트엔드 배포)
+
 ```env
 VITE_API_BASE_URL=https://[백엔드-도메인]/api
 ```
@@ -138,15 +149,18 @@ VITE_API_BASE_URL=https://[백엔드-도메인]/api
 ## 🛠️ 트러블슈팅
 
 ### 데이터베이스 연결 실패
+
 - Supabase Connection String 확인 (Pooling Mode)
 - DATABASE_URL 환경 변수 확인
 - 방화벽 설정 확인
 
 ### CORS 오류
+
 - `server/index.js`에서 CORS origin 설정 확인
 - 프론트엔드 도메인이 허용 목록에 있는지 확인
 
 ### JWT 인증 실패
+
 - JWT_SECRET 환경 변수가 설정되었는지 확인
 - 토큰 만료 시간 확인
 
