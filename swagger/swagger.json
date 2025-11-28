@@ -3,12 +3,16 @@
   "info": {
     "title": "JKN-TODOLIST API",
     "version": "1.0.0",
-    "description": "JKN-TODOLIST API 명세서"
+    "description": "JKN-TODOLIST API 명세서 - 개인 할일과 공통 일정을 통합 관리하는 스마트 할일 관리 애플리케이션"
   },
   "servers": [
     {
       "url": "http://localhost:3000/api",
       "description": "Local Development Server"
+    },
+    {
+      "url": "https://your-vercel-deployed-url.com/api",
+      "description": "Production Server"
     }
   ],
   "components": {
@@ -47,6 +51,17 @@
           "updated_at": { "type": "string", "format": "date-time" }
         }
       },
+      "PublicEvent": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "integer" },
+          "title": { "type": "string" },
+          "date": { "type": "string", "format": "date" },
+          "type": { "type": "string", "enum": ["HOLIDAY", "NOTICE", "SOLAR_TERM", "SEASONAL_DAY"] },
+          "created_at": { "type": "string", "format": "date-time" },
+          "updated_at": { "type": "string", "format": "date-time" }
+        }
+      },
       "AuthResponse": {
         "type": "object",
         "properties": {
@@ -58,6 +73,19 @@
               "accessToken": { "type": "string" },
               "refreshToken": { "type": "string" }
             }
+          }
+        }
+      },
+      "CalendarData": {
+        "type": "object",
+        "properties": {
+          "todos": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Todo" }
+          },
+          "publicEvents": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/PublicEvent" }
           }
         }
       }
@@ -456,6 +484,163 @@
             }
           },
           "404": { "description": "할일을 찾을 수 없음" }
+        }
+      }
+    },
+    "/calendar/{year}/{month}": {
+      "get": {
+        "summary": "달력 데이터 조회 (할일 및 공공 일정)",
+        "tags": ["Calendar"],
+        "security": [{ "bearerAuth": [] }],
+        "parameters": [
+          {
+            "name": "year",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer" },
+            "description": "년도 (예: 2025)"
+          },
+          {
+            "name": "month",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "integer", "minimum": 1, "maximum": 12 },
+            "description": "월 (1-12)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "달력 데이터 조회 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "data": { "$ref": "#/components/schemas/CalendarData" }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "description": "잘못된 년/월 값" },
+          "500": { "description": "서버 내부 오류" }
+        }
+      }
+    },
+    "/sync/holidays": {
+      "post": {
+        "summary": "공휴일 데이터 동기화 (관리자용)",
+        "tags": ["Sync"],
+        "security": [{ "bearerAuth": [] }],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "year": { "type": "integer", "description": "동기화할 연도 (선택사항, 기본값: 올해)" }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "공휴일 동기화 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "message": { "type": "string" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "created": { "type": "integer", "description": "생성된 이벤트 수" },
+                        "updated": { "type": "integer", "description": "업데이트된 이벤트 수" },
+                        "skipped": { "type": "integer", "description": "스킵된 이벤트 수" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "인증 실패" },
+          "500": { "description": "동기화 실패" }
+        }
+      }
+    },
+    "/cron/weekly-sync": {
+      "get": {
+        "summary": "주간 동기화 (올해 데이터 갱신)",
+        "tags": ["Cron"],
+        "description": "Vercel Cron을 사용한 자동화 작업 - 임시공휴일 등 반영",
+        "responses": {
+          "200": {
+            "description": "주간 동기화 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "500": { "description": "동기화 실패" }
+        }
+      }
+    },
+    "/cron/annual-sync": {
+      "get": {
+        "summary": "연간 동기화 (내후년 데이터 확보)",
+        "tags": ["Cron"],
+        "description": "Vercel Cron을 사용한 자동화 작업 - 내후년 데이터 미리 확보",
+        "responses": {
+          "200": {
+            "description": "연간 동기화 성공",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "500": { "description": "동기화 실패" }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "서버 상태 확인",
+        "tags": ["Health"],
+        "description": "서버가 정상적으로 작동 중인지 확인",
+        "responses": {
+          "200": {
+            "description": "서버 정상 작동",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string", "example": "OK" },
+                    "message": { "type": "string", "example": "Server is running" }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }
