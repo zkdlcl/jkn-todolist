@@ -1,57 +1,41 @@
 # JKN-TODOLIST
 
-개인 할일과 공통 일정을 통합 관리하는 스마트 할일 관리 애플리케이션
+> 개인 할일과 **공휴일·기념일·24절기** 같은 공통 일정을 한 달력에서 함께 보는 할일 관리 웹앱입니다.
+> 기획 문서(도메인 정의 → PRD → ERD → 아키텍처 → 실행 계획)부터 시작해 **MVP를 2일 만에 배포**까지 마친 풀스택 프로젝트입니다.
 
-## 🎯 프로젝트 개요
+## 핵심 기능
+- **인증**: 회원가입·로그인, JWT access/refresh 토큰, 만료 시 401 인터셉터가 자동 갱신
+- **할일 관리**: CRUD, 우선순위(LOW/MEDIUM/HIGH), 시작·마감일, 완료 처리, 필터링·정렬
+- **휴지통**: 삭제는 소프트 삭제(`deleted_status`)로 처리해 복구·영구 삭제 지원
+- **달력 뷰**: 월별로 내 할일과 공통 일정을 함께 표시
+- **공휴일 자동 동기화**: 한국천문연구원(KASI) 특일 정보 API를 서버 스케줄러가 주기적으로 가져와 DB에 반영
+- **알림 UX**: 브라우저 `alert`를 SweetAlert2/Toastify 컴포넌트로 전부 대체
 
-**목표**: 2일 내 MVP 출시 완료 ✅
+## 설계에서 신경 쓴 부분
+- **계층 분리 백엔드**: `routes → controllers → services → repositories` 로 나눠 비즈니스 로직과 SQL을 분리했습니다.
+- **공통 일정 데이터 파이프라인**: KASI는 매년 6~8월경 차차년도 데이터를 공개하므로, 매주 월요일 동기화와 매년 7월 1일 연간 동기화를 Vercel Cron으로 나눠 걸었습니다. `(date, title)` 유니크 제약으로 중복 없이 갱신합니다.
+- **문서 우선 개발**: 요구사항·ERD·와이어프레임·실행 계획을 코드보다 먼저 작성했고, 디버깅 과정도 `docs/debug-records/`에 남겼습니다.
+- **테스트**: 서버 API·리포지토리에 Jest + Supertest 테스트 30개, 인증 상태 유지는 Playwright 시나리오로 확인합니다.
+- **CI/CD**: GitHub Actions로 Vercel에 백엔드·프런트를 각각 배포합니다.
 
-**핵심 기능**:
+## 기술 스택
+| 영역 | 사용 기술 |
+|---|---|
+| Frontend | React 19, Vite, Zustand, React Router, React Hook Form, Tailwind CSS 4, react-big-calendar, date-fns, SweetAlert2 |
+| Backend | Node.js, Express 5, node-cron, bcrypt, JWT, Swagger UI |
+| Database | PostgreSQL (Supabase) — `users`, `todos`, `refresh_tokens`, `public_events` |
+| Test / Infra | Jest, Supertest, Playwright, GitHub Actions, Vercel |
 
-- ✅ 사용자 인증 (회원가입, 로그인)
-- ✅ 할일 관리 (CRUD, 필터링, 정렬)
-- ✅ 휴지통 (삭제 복구, 영구 삭제)
-- ✅ 달력 뷰 (확장 기능 개발 완료)
-- ✅ 국경일 API 연동 (확장 기능 개발 완료)
-- ✅ 알림 시스템 (브라우저 alert 대체)
-
-## 🛠️ 기술 스택
-
-### Frontend
-
-- React 18 + Vite
-- Zustand (상태 관리)
-- Tailwind CSS
-- SweetAlert2 (알림 시스템)
-- React Router
-- React Hook Form
-- date-fns
-
-### Backend
-
-- Node.js + Express
-- PostgreSQL (Supabase)
-- JWT (인증)
-- bcrypt (비밀번호 해싱)
-
-### Testing
-
-- Jest + Supertest
-
-## 📁 프로젝트 구조
-
+## 프로젝트 구조
 ```
 jkn-todolist/
-├── client/          # React 프론트엔드
-├── server/          # Node.js 백엔드
-├── database/        # DB 스키마
-├── docs/            # 프로젝트 문서
-│   ├── 0-8번        # 기본 개발 문서
-│   ├── API/         # API 연동 가이드
-│   ├── extentions/  # 확장 기능 문서
-│   └── debug-records/ # 디버깅 기록
-├── swagger/         # API 문서
-└── tests/           # 통합 테스트
+├── client/          # React 프런트엔드 (pages, components, stores, api)
+├── server/          # Express 백엔드 (routes, controllers, services, repositories, cron)
+├── database/        # DB 스키마·마이그레이션
+├── docs/            # 도메인·PRD·ERD·아키텍처·와이어프레임, API 연동, 디버깅 기록
+├── swagger/         # API 명세
+├── tests/           # Playwright 시나리오
+└── .github/         # CI/CD 워크플로우
 ```
 
 ## 📚 문서
@@ -209,8 +193,9 @@ npm test
 **테스트 현황**: 30개 통과 ✅
 
 - Auth API: 9개
-- Todo API: 15개
+- Todo API: 9개
 - Trash API: 6개
+- UserRepository: 6개
 
 ## 📊 API 문서
 
